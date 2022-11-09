@@ -10,4 +10,6 @@
     <color name="gray">#808080</color>
     <color name="light_gray">#D3D3D3</color>
     <color name="red">#FF0000</color>
+    <color name="main">#0055FF</color>
+    <color name="main2">#00AAFF</color>
 </resources>

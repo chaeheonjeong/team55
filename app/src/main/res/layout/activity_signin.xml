@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_gradient_screen"
         android:layout_width="match_parent"
@@ -60,8 +61,7 @@
             android:background="@drawable/sign_in_button_continue"
             android:text="계속하기"
             android:textColor="@color/white"
-            android:textSize="18sp"
-            />
+            android:textSize="18sp" />
 
         <!--  소셜 로그인 -->
 
@@ -69,11 +69,11 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:text="계속 진행하면 Pinterest 서비스 약관에 동의하고 개인정보 보호정책을 읽었음을 인정하는 것으로 간주됩니다."
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="14sp"
-            android:layout_marginTop="100dp"
-            android:text="계속 진행하면 Pinterest 서비스 약관에 동의하고 개인정보 보호정책을 읽었음을 인정하는 것으로 간주됩니다1."
+            android:textSize="14sp" />
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>

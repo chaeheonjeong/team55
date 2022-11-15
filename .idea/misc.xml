@@ -3,9 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Jch/AndroidStudioProjects/project/app/src/main/res/layout/activity_friendslist.xml" value="0.24947916666666667" />
         <entry key="..\:/Users/Jch/AndroidStudioProjects/project/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/Jch/AndroidStudioProjects/project/app/src/main/res/layout/activity_register.xml" value="0.24947916666666667" />
         <entry key="..\:/Users/Jch/AndroidStudioProjects/project/app/src/main/res/layout/activity_signup.xml" value="0.24947916666666667" />
+        <entry key="..\:/Users/Jch/AndroidStudioProjects/project/app/src/main/res/layout/friends_list.xml" value="0.264" />
+        <entry key="..\:/Users/Jch/AndroidStudioProjects/project/app/src/main/res/layout/friends_list_item.xml" value="0.25" />
+        <entry key="..\:/Users/Jch/AndroidStudioProjects/project/app/src/main/res/layout/friendslist.xml" value="0.264" />
+        <entry key="..\:/Users/Jch/AndroidStudioProjects/project/app/src/main/res/layout/friendslist_fragment.xml" value="0.24947916666666667" />
+        <entry key="..\:/Users/Jch/AndroidStudioProjects/project/app/src/main/res/layout/friendslist_item.xml" value="0.24947916666666667" />
+        <entry key="..\:/Users/Jch/AndroidStudioProjects/project/app/src/main/res/layout/timeline.xml" value="0.24947916666666667" />
+        <entry key="..\:/Users/Jch/AndroidStudioProjects/project/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.255" />
       </map>
     </option>
   </component>

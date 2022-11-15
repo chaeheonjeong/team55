@@ -17,7 +17,6 @@ class SignUp: AppCompatActivity() {
             builder
                 .setMessage("이미 생성된 계정입니다")
                 .setPositiveButton("확인", DialogInterface.OnClickListener { dialog, id ->
-                    binding.joinEmail.setSelection(0)
         })
             builder.create()
             builder.show()

@@ -20,6 +20,8 @@ class SignUp: AppCompatActivity() {
         })
             builder.create()
             builder.show()
+
+            
         }
     }
 

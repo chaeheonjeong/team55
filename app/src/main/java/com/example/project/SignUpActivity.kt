@@ -22,7 +22,7 @@ import java.util.regex.Pattern
 
 class SignUpActivity : AppCompatActivity() {
     private val db: FirebaseFirestore = Firebase.firestore
-    private val itemsCollectionRef = db.collection("users")
+    private val itemsCollectionRef = db.collection("test")
     val pwPattern = "^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z[0-9]]"
     val pattern = Pattern.compile(pwPattern)
     private lateinit var auth: FirebaseAuth

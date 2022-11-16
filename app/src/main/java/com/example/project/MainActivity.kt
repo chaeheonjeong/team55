@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+//깃테스트
         binding.button2.setOnClickListener {
             val intent = Intent(this, Profile::class.java)
             startActivity(intent)

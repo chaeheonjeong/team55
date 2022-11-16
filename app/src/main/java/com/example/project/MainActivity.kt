@@ -7,6 +7,8 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.project.databinding.ActivityMainBinding
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -15,10 +17,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-//깃테스트
-        binding.button2.setOnClickListener {
-            val intent = Intent(this, Profile::class.java)
-            startActivity(intent)
+
+        //테스트용 mainactivity입니다.
+        if (Firebase.auth.currentUser == null) {
+            startActivity(
+                Intent(this, LoginActivity::class.java)
+            )
+            finish()
+        }
+        binding.textUID.text = Firebase.auth.currentUser?.uid ?: "No User"
+
+        binding.buttonSignout.setOnClickListener {
+            Firebase.auth.signOut()
+            startActivity(
+                Intent(this, LoginActivity::class.java))
+            finish()
         }
     }
 }

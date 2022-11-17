@@ -31,7 +31,6 @@ class LoginActivity : AppCompatActivity() {
             startActivity(
                 Intent(this, SignUpActivity::class.java)
             )
-            finish()
         }
     }
     private fun doLogin(userEmail: String, password: String) {

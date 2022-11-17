@@ -85,7 +85,7 @@ class SearchActivity : AppCompatActivity() {
                     items.add("${doc["name"]} - ${doc["email"]}")
                 }
                 AlertDialog.Builder(this)
-                  .setTitle("검색하신 이름의 이름과 아이디 $p")
+                  .setTitle("검색하신 이름의 이름과 아이디")
                     .setItems(items.toTypedArray()) { dialog, which -> }.show()
                 binding.showText.text = items.toString()
             }

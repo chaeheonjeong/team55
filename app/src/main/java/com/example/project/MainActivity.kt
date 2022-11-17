@@ -33,7 +33,12 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+        binding.testbutton.setOnClickListener {
+            startActivity(
+                Intent(this, SearchActivity::class.java)
+            )
 
+        }
         //테스트용 mainactivity입니다.
         if (Firebase.auth.currentUser == null) {
             startActivity(

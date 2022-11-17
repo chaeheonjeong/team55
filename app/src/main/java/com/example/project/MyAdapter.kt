@@ -6,7 +6,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.project.databinding.ItemBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 data class Item(val id: String, val name: String,val email:String) {
     constructor(doc: QueryDocumentSnapshot) :
@@ -20,6 +26,9 @@ class MyViewHolder(val binding: ItemBinding) : RecyclerView.ViewHolder(binding.r
 
 class MyAdapter(private val context: Context, private var items: List<Item>)
     : RecyclerView.Adapter<MyViewHolder>() {
+
+    private val db: FirebaseFirestore = Firebase.firestore
+    private var auth: FirebaseAuth = Firebase.auth
 
     fun interface OnItemClickListener {
         fun onItemClick(student_id: String)
@@ -43,11 +52,32 @@ class MyAdapter(private val context: Context, private var items: List<Item>)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        val itemsCollectionRef = db.collection("test")
         val item = items[position]
+
         holder.binding.textUserName.text = item.name
         holder.binding.textEmail.text = item.email
+        val uid = auth.currentUser?.uid
+
+        if(uid == itemsCollectionRef.document(item.id).toString()) {
+            holder.binding.AddBtn.isEnabled = false
+        }
+
         holder.binding.AddBtn.setOnClickListener {
-            println("======친구 추가 구현=======")
+            /*var map:String = item.name
+            itemsCollectionRef.document(uid!!).update("friends",map)
+                .addOnSuccessListener { println("친구 추가 성공") }.addOnFailureListener { println("친구 추가 실패 + name : ${item.name}")  }
+
+             */
+            var map= mutableMapOf<String,Any>()
+            map["name"] =item.name
+
+
+            FirebaseFirestore.getInstance().collection("test").document(uid!!)
+                .update("friends", FieldValue.arrayUnion(item.name))
+                .addOnSuccessListener {
+                    println("친구 추가 성공 + ${item.name}")
+                }. addOnFailureListener{ println("친구 추가 실패 + name : ${item.name}")  }
         }
     }
 

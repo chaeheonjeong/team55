@@ -2,11 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/homeFragment"
-        android:title="home"/>
+        android:id="@+id/timeLine"
+        android:icon="@drawable/home"
+        android:title="타임라인"/>
 
     <item
-        android:id="@+id/searchFragment"
+        android:id="@+id/Search"
+        android:icon="@drawable/search"
         android:title="검색"/>
-
+    <item
+        android:id="@+id/Profile"
+        android:icon="@drawable/user"
+        android:title="프로필"
+        />
+    <item
+        android:id="@+id/Friend"
+        android:icon="@drawable/list"
+        android:title="친구 목록"
+        />
 </menu>

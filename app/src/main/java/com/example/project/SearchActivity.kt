@@ -8,6 +8,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.project.databinding.ActivitySearchBinding
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -18,6 +20,7 @@ class SearchActivity : AppCompatActivity() {
     private val db: FirebaseFirestore = Firebase.firestore
     private val itemsCollectionRef = db.collection("test")
     private var snapshotListener: ListenerRegistration? = null
+    private var auth: FirebaseAuth = Firebase.auth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +39,36 @@ class SearchActivity : AppCompatActivity() {
         binding.buttonQuery.setOnClickListener {
             queryWhere()
         }
+        binding.TestButton.setOnClickListener {
 
+            /*itemsCollectionRef.whereEqualTo("name", p).get()
+                .addOnSuccessListener {
+                    binding.progressWait.visibility = View.GONE
+                    val items = arrayListOf<String>()
+                    for (doc in it) {
+                        items.add("${doc["name"]} - ${doc["email"]}")
+                    }
+                    AlertDialog.Builder(this)
+                        .setTitle("검색하신 이름의 이름과 아이디")
+                        .setItems(items.toTypedArray()) { dialog, which -> }.show()
+                    binding.showText.text = items.toString()
+                }
+                .addOnFailureListener {
+                    binding.progressWait.visibility = View.GONE
+                }
+
+             */
+            itemsCollectionRef.get().addOnSuccessListener {
+                val uid = auth.currentUser?.uid
+                val items = arrayListOf<String>()
+                for (doc in it) {
+                    if(uid == doc["uid"].toString())
+                        items.add(doc["name"].toString())
+                }
+                println("=====${uid}")
+                println("=====${items}")
+            }
+        }
     }
 
     override fun onStart() {

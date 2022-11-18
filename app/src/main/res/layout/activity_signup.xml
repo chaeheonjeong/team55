@@ -148,16 +148,6 @@
         app:layout_constraintTop_toBottomOf="@+id/join_explain"
         tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck,TouchTargetSizeCheck,TouchTargetSizeCheck" />
 
-    <DatePicker
-        android:id="@+id/join_datePicker"
-        android:layout_width="300dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="23dp"
-        android:calendarViewShown="false"
-        android:datePickerMode="spinner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/join_passwd2" />
-
     <TextView
         android:id="@+id/join_birth1"
         android:layout_width="wrap_content"
@@ -170,6 +160,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/join_passwd1" />
 
+    <Button
+        android:id="@+id/setDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:text="생년월일 입력하기"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.481"
+        app:layout_constraintStart_toEndOf="@+id/join_birth1"
+        app:layout_constraintTop_toBottomOf="@+id/join_passwd2" />
+
+    <TextView
+        android:id="@+id/resultDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="년도는 신경쓰지말고 입력해주세요!"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.629"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/setDate" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

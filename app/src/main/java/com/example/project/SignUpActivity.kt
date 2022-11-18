@@ -1,5 +1,7 @@
 package com.example.project
 
+import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.content.ClipData
 import android.content.Intent
 import android.os.Bundle
@@ -23,24 +25,40 @@ import java.util.regex.Pattern
 class SignUpActivity : AppCompatActivity() {
     private val db: FirebaseFirestore = Firebase.firestore
     private val itemsCollectionRef = db.collection("test")
-    val pwPattern = "^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z[0-9]]"
-    val pattern = Pattern.compile(pwPattern)
+    private val pwPattern = "^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z[0-9]]"
+    private val pattern: Pattern = Pattern.compile(pwPattern)
     private lateinit var auth: FirebaseAuth
+    private var Useryear:Int = 0
+    private var Usermonth:Int = 0
+    private var Userday:Int = 0
+    private lateinit var cal:Calendar
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
         auth = Firebase.auth
+
+        binding.setDate.setOnClickListener {
+            cal = Calendar.getInstance()
+            var dateString:String
+            //캘린더뷰 만들기
+            val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+                dateString = "${month+1}월 ${dayOfMonth}일"
+                binding.resultDate.text = "입력날짜 : $dateString"
+                Useryear = year
+                Usermonth = month
+                Userday = dayOfMonth
+            }
+            DatePickerDialog(this, dateSetListener, cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH)).show() }
+
+
         binding.joinButton.setOnClickListener {
 
             val userEmail = binding.joinEmail.text.toString()
             val password = binding.joinPasswd2.text.toString()
             val name = binding.joinName2.text.toString()
-            val calendar = Calendar.getInstance()
-            val year = calendar.get(Calendar.YEAR)
-            val month = calendar.get(Calendar.MONTH)
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
 
             val matcher = pattern.matcher(password)
 
@@ -54,14 +72,12 @@ class SignUpActivity : AppCompatActivity() {
                 Toast.makeText(this, "영어와 숫자를 사용하여 비밀번호를 작성해주세요", Toast.LENGTH_SHORT).show()
             }
             else { //잘 받아와지는지 확인용 print문
-                doSignUp(userEmail, password, name, year, month, day)
-                println("====year : $year, month : $month, day : $day=====")
+                doSignUp(userEmail, password, name)
             }
         }
     }
 
-    private fun doSignUp(userEmail: String, password: String, name:String, year:Int
-    , month : Int , day :Int) {
+    private fun doSignUp(userEmail: String, password: String, name:String) {
         Firebase.auth.createUserWithEmailAndPassword(userEmail, password)
             .addOnCompleteListener {
                 if(it.isSuccessful) {
@@ -71,11 +87,10 @@ class SignUpActivity : AppCompatActivity() {
                         "email" to userEmail,
                         "name" to name,
                         "passwd" to password,
-                        "year" to year,
-                        "month" to month+1,
-                        "day" to day
+                        //"year" to Useryear,
+                        "month" to Usermonth+1,
+                        "day" to Userday
                     )
-
                     itemsCollectionRef.document(uid!!).set(itemMap)
                         .addOnSuccessListener{ }.addOnFailureListener { }
 

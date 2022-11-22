@@ -12,11 +12,13 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.project.databinding.ActivityMainBinding
 import com.example.project.HomeFragment
+import com.example.project.cogjs.FriendsList
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 private const val TAG_HOME = "home_fragment"
 private const val TAG_SEARCH = "search_fragment"
+private const val TAG_FRIEND = "FriendsList"
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -51,6 +53,7 @@ class MainActivity : AppCompatActivity() {
             when(item.itemId) {
                 R.id.timeLine -> setFragment(TAG_HOME, HomeFragment())
                 R.id.Search -> setFragment(TAG_SEARCH, SearchFragment())
+                R.id.Friend -> setFragment(TAG_FRIEND, FriendsList())
             }
             true
             }
@@ -67,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         //작업이 수월하도록 manager에 add되어있는 fragment들을 변수로 할당해둠
         val category = manager.findFragmentByTag(TAG_HOME)
         val home = manager.findFragmentByTag(TAG_SEARCH)
+        val friend = manager.findFragmentByTag(TAG_FRIEND)
         //val myPage = manager.findFragmentByTag(TAG_MY_PAGE)
 
         //모든 프래그먼트 hide
@@ -75,6 +79,9 @@ class MainActivity : AppCompatActivity() {
         }
         if(home!=null){
             ft.hide(home)
+        }
+        if(friend!=null){
+            ft.hide(friend)
         }
 
         //선택한 항목에 따라 그에 맞는 프래그먼트만 show
@@ -86,6 +93,11 @@ class MainActivity : AppCompatActivity() {
         else if(tag == TAG_SEARCH){
             if(home!=null){
                 ft.show(home)
+            }
+        }
+        else if(tag == TAG_FRIEND){
+            if(friend!=null){
+                ft.show(friend)
             }
         }
         //마무리

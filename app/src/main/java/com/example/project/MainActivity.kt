@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.project.databinding.ActivityMainBinding
 import com.example.project.HomeFragment
+import com.example.project.MS.ProfileFragment
 import com.example.project.cogjs.FriendsList
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -19,6 +20,7 @@ import com.google.firebase.ktx.Firebase
 private const val TAG_HOME = "home_fragment"
 private const val TAG_SEARCH = "search_fragment"
 private const val TAG_FRIEND = "FriendsList"
+private const val TAG_PROFILE = "Profile"
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -54,6 +56,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.timeLine -> setFragment(TAG_HOME, HomeFragment())
                 R.id.Search -> setFragment(TAG_SEARCH, SearchFragment())
                 R.id.Friend -> setFragment(TAG_FRIEND, FriendsList())
+                R.id.Profile ->setFragment(TAG_PROFILE, ProfileFragment())
             }
             true
             }
@@ -71,6 +74,7 @@ class MainActivity : AppCompatActivity() {
         val category = manager.findFragmentByTag(TAG_HOME)
         val home = manager.findFragmentByTag(TAG_SEARCH)
         val friend = manager.findFragmentByTag(TAG_FRIEND)
+        val profile = manager.findFragmentByTag(TAG_PROFILE)
         //val myPage = manager.findFragmentByTag(TAG_MY_PAGE)
 
         //모든 프래그먼트 hide
@@ -82,6 +86,9 @@ class MainActivity : AppCompatActivity() {
         }
         if(friend!=null){
             ft.hide(friend)
+        }
+        if(profile!=null){
+            ft.hide(profile)
         }
 
         //선택한 항목에 따라 그에 맞는 프래그먼트만 show
@@ -98,6 +105,11 @@ class MainActivity : AppCompatActivity() {
         else if(tag == TAG_FRIEND){
             if(friend!=null){
                 ft.show(friend)
+            }
+        }
+        else if(tag == TAG_PROFILE){
+            if(profile!=null){
+                ft.show(profile)
             }
         }
         //마무리

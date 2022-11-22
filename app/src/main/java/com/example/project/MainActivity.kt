@@ -14,6 +14,8 @@ import com.example.project.databinding.ActivityMainBinding
 import com.example.project.HomeFragment
 import com.example.project.MS.ProfileFragment
 import com.example.project.cogjs.FriendsList
+import com.example.project.ui.post.adding.AddingPostFragment
+import com.example.project.ui.timeline.TimelineFragment
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -21,6 +23,7 @@ private const val TAG_HOME = "home_fragment"
 private const val TAG_SEARCH = "search_fragment"
 private const val TAG_FRIEND = "FriendsList"
 private const val TAG_PROFILE = "Profile"
+private const val TAG_ADD = "add_post"
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -33,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        setFragment(TAG_HOME, HomeFragment())
+        setFragment(TAG_HOME, TimelineFragment())
         /*binding.navigationView.setOnItemSelectedListener { item ->
             when(item.itemId) {
                 R.id.timeLine -> setFragment(TAG_HOME, HomeFragment())
@@ -53,10 +56,11 @@ class MainActivity : AppCompatActivity() {
 
         binding.navigationView.setOnItemSelectedListener { item->
             when(item.itemId) {
-                R.id.timeLine -> setFragment(TAG_HOME, HomeFragment())
+                R.id.timeLine -> setFragment(TAG_HOME, TimelineFragment())
                 R.id.Search -> setFragment(TAG_SEARCH, SearchFragment())
                 R.id.Friend -> setFragment(TAG_FRIEND, FriendsList())
                 R.id.Profile ->setFragment(TAG_PROFILE, ProfileFragment())
+                R.id.AddPost -> setFragment(TAG_ADD, AddingPostFragment())
             }
             true
             }
@@ -75,6 +79,7 @@ class MainActivity : AppCompatActivity() {
         val home = manager.findFragmentByTag(TAG_SEARCH)
         val friend = manager.findFragmentByTag(TAG_FRIEND)
         val profile = manager.findFragmentByTag(TAG_PROFILE)
+        val add = manager.findFragmentByTag(TAG_ADD)
         //val myPage = manager.findFragmentByTag(TAG_MY_PAGE)
 
         //모든 프래그먼트 hide
@@ -89,6 +94,9 @@ class MainActivity : AppCompatActivity() {
         }
         if(profile!=null){
             ft.hide(profile)
+        }
+        if(add!=null) {
+            ft.hide(add)
         }
 
         //선택한 항목에 따라 그에 맞는 프래그먼트만 show
@@ -110,6 +118,11 @@ class MainActivity : AppCompatActivity() {
         else if(tag == TAG_PROFILE){
             if(profile!=null){
                 ft.show(profile)
+            }
+        }
+        else if(tag == TAG_ADD){
+            if(add!=null){
+                ft.show(add)
             }
         }
         //마무리

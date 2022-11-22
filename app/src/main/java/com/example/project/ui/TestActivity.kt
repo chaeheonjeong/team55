@@ -1,12 +1,10 @@
 package com.example.project.ui
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.project.R
 import com.example.project.databinding.ActivityTestBinding
-import com.example.project.ui.post.PostFragment
+import com.example.project.ui.timeline.TimelineFragment
 
 class TestActivity: AppCompatActivity() {
 
@@ -17,7 +15,7 @@ class TestActivity: AppCompatActivity() {
 
         binding.btnFragmentA.setOnClickListener {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.frame_layout, PostFragment(), null)
+                .replace(R.id.frame_layout, TimelineFragment(), null)
                 .setReorderingAllowed(true)
                 .addToBackStack(null)
                 .commit()

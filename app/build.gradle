@@ -72,4 +72,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
     // viewModelScope
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0-alpha03"
+
+    // card view
+    implementation "androidx.cardview:cardview:1.0.0"
 }

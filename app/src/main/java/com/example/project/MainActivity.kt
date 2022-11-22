@@ -51,7 +51,6 @@ class MainActivity : AppCompatActivity() {
             when(item.itemId) {
                 R.id.timeLine -> setFragment(TAG_HOME, HomeFragment())
                 R.id.Search -> setFragment(TAG_SEARCH, SearchFragment())
-                R.id.Profile -> startActivity(Intent(this, SearchActivity::class.java))
             }
             true
             }

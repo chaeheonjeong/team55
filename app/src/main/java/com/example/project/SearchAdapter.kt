@@ -54,11 +54,11 @@ class SearchAdapter(private var items: List<MyItem>)
         val uid = auth.currentUser?.uid
 
         holder.binding.AddBtn.setOnClickListener {
-                FirebaseFirestore.getInstance().collection("test").document(uid!!)
-                    .update("friends", FieldValue.arrayUnion(item.name))
-                    .addOnSuccessListener {
-                        println("친구 추가 성공 + ${item.name}")
-                    }.addOnFailureListener { println("친구 추가 실패 + name : ${item.name}") }
+            FirebaseFirestore.getInstance().collection("test").document(uid!!)
+                .update("friends", FieldValue.arrayUnion(item.name))
+                .addOnSuccessListener {
+                    println("친구 추가 성공 + ${item.name}")
+                }.addOnFailureListener { println("친구 추가 실패 + name : ${item.name}") }
         }
     }
     override fun getItemCount() = items.size
@@ -67,36 +67,4 @@ class SearchAdapter(private var items: List<MyItem>)
         items = newList
         notifyDataSetChanged()
     }
-    /*override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val itemsCollectionRef = db.collection("test")
-        val item = items[position]
-
-        holder.binding.textUserName.text = item.name
-        holder.binding.textEmail.text = item.email
-        val uid = auth.currentUser?.uid
-
-        if(uid == itemsCollectionRef.document(item.id).toString()) {
-            holder.binding.AddBtn.text = "자기 자신"
-        }
-
-        holder.binding.AddBtn.setOnClickListener {
-            /*var map:String = item.name
-            itemsCollectionRef.document(uid!!).update("friends",map)
-                .addOnSuccessListener { println("친구 추가 성공") }.addOnFailureListener { println("친구 추가 실패 + name : ${item.name}")  }
-
-             */
-            var map= mutableMapOf<String,Any>()
-            map["name"] =item.name
-
-            FirebaseFirestore.getInstance().collection("test").document(uid!!)
-                .update("friends", FieldValue.arrayUnion(item.name))
-                .addOnSuccessListener {
-                    println("친구 추가 성공 + ${item.name}")
-                }. addOnFailureListener{ println("친구 추가 실패 + name : ${item.name}")  }
-        }
-
-
-    }
-
-     */
 }

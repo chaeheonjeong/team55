@@ -68,10 +68,9 @@ class SearchFragment : Fragment() {
             }
         }
         if(!isSame) {
-            Toast.makeText(this.activity, "자기 자신을 검색할 수 없습니다.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this.activity, "정확하게 다시 검색해주세요(자기자신 검색X).", Toast.LENGTH_SHORT).show()
         }
         else {
-
             println(isSame)
             itemsCollectionRef.whereEqualTo("name", p).get()
                 .addOnSuccessListener {

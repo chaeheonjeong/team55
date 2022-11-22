@@ -45,7 +45,7 @@ class SignUpActivity : AppCompatActivity() {
             var dateString:String
             //캘린더뷰 만들기
             val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-                dateString = "${month+1}월 ${dayOfMonth}일"
+                dateString = "${year}년 ${month+1}월 ${dayOfMonth}일"
                 binding.resultDate.text = "입력날짜 : $dateString"
                 Useryear = year
                 Usermonth = month
@@ -87,7 +87,7 @@ class SignUpActivity : AppCompatActivity() {
                         "email" to userEmail,
                         "name" to name,
                         "passwd" to password,
-                        //"year" to Useryear,
+                        "year" to Useryear,
                         "month" to Usermonth+1,
                         "day" to Userday
                     )

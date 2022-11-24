@@ -29,7 +29,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 
-// todo 크기에 따른 압축 로직 만들기
+// TODO 추가하거나 삭제했을 때 db엔 반영이 되지만, viewModel에 있는 데이터에는 변화가 없어서 observe를 제대로 실행시키지 못함. 이거 해결
 class AddingPostFragment : Fragment() {
     private lateinit var binding: FragmentAddingPostBinding
     private val user = Firebase.auth.currentUser

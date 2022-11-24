@@ -49,7 +49,6 @@ class PostViewModel(postKey: String, val uid: String?): ViewModel() {
         val documentData = repository.getPost()
         documentData.addOnSuccessListener { snapshot ->
             _post.value = snapshot.toObject<Post>()
-            Log.d("writer", _post.value?.writerUid!!)
             loadWriter(_post.value?.writerUid!!)
         }
     }

@@ -1,5 +1,6 @@
 package com.example.project.ui.timeline
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,6 +25,7 @@ class TimelineViewModel: ViewModel() {
             val tempPosts = mutableListOf<Post>()
             for(document in documents) {
                 val postValue = document.toObject<Post>()
+                Log.d("exists", "dd ${postValue.exists}")
                 tempPosts.add(postValue)
             }
 

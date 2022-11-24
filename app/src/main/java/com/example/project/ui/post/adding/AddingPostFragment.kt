@@ -1,6 +1,7 @@
 package com.example.project.ui.post.adding
 
 import android.app.Activity.RESULT_OK
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -29,7 +30,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 
 // todo 크기에 따른 압축 로직 만들기
-class AddingPostFragment: Fragment() {
+class AddingPostFragment : Fragment() {
     private lateinit var binding: FragmentAddingPostBinding
     private val user = Firebase.auth.currentUser
     lateinit var launcher: ActivityResultLauncher<Intent>
@@ -84,8 +85,8 @@ class AddingPostFragment: Fragment() {
                 inputManager.hideSoftInputFromWindow(requireActivity().currentFocus!!.windowToken,
                     InputMethodManager.HIDE_NOT_ALWAYS)
             }
-            
-            
+
+
             // 기본적인 정보를 일단 db에 올린다.
             val postValue = Post(
                 title = binding.etAddingTitle.text.toString(),
@@ -93,7 +94,6 @@ class AddingPostFragment: Fragment() {
                 writerUid = user!!.uid
             )
 
-            // todo Toast 띄어주고, 로딩 화면 -> 하얀 배경화면 띄어주기
             showProgressBar()
             // postKey를 auto로 만든 후, 나중에 필드 값에 postKey, imageUri 저장
             val userRef = db.document("users/${user.uid}")
@@ -123,17 +123,18 @@ class AddingPostFragment: Fragment() {
             }
         }
     }
+
     // button ->
     private fun uploadToStorage(uri: Uri, postKey: String) {
         val fileName = System.currentTimeMillis()
-            val ref = fireStorage.reference.child("post_image/$fileName.jpg")
-            ref.putFile(uri).continueWithTask { task ->
-                if (!task.isSuccessful) {
-                    task.exception?.let {
-                        throw it
-                    }
+        val ref = fireStorage.reference.child("post_image/$fileName.jpg")
+        ref.putFile(uri).continueWithTask { task ->
+            if (!task.isSuccessful) {
+                task.exception?.let {
+                    throw it
                 }
-                ref.downloadUrl
+            }
+            ref.downloadUrl
         }.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val downloadUri = task.result

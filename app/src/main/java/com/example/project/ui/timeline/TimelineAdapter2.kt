@@ -12,31 +12,66 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
+import com.example.project.databinding.ItemLoadingBinding
 import com.example.project.databinding.ItemPostBinding
 import com.example.project.model.Post
 import com.example.project.ui.post.PostActivity
 import com.example.project.ui.timeline.ModalBottomSheet.Companion.TAG
 
 class TimelineAdapter2(val fragment: TimelineFragment) :
-    RecyclerView.Adapter<TimelineViewHolder2>() {
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private val VIEW_TYPE_ITEM = 0
+    private val VIEW_TYPE_LOADING = 1
     var differ = AsyncListDiffer(this, TimelineDiffUtil2())
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TimelineViewHolder2 {
-        val binding = ItemPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return TimelineViewHolder2(binding, fragment)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when(viewType) {
+            VIEW_TYPE_ITEM -> {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = ItemPostBinding.inflate(layoutInflater, parent, false)
+                TimelineViewHolder(binding, fragment)
+            }
+            else -> { // VIEW_TYPE_LOADING
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = ItemLoadingBinding.inflate(layoutInflater, parent, false)
+                LoadingViewHolder(binding)
+            }
+        }
     }
 
-    override fun onBindViewHolder(holder: TimelineViewHolder2, position: Int) {
-        val post = differ.currentList[position]
-        holder.bind(post)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if(holder is TimelineViewHolder) {
+            val post = differ.currentList[position]
+            holder.bind(post)
+        } else {
+
+        }
     }
 
     override fun getItemCount(): Int {
         return differ.currentList.size
     }
+
+    // 뷰의 타입을 정해주는 곳
+    override fun getItemViewType(position: Int): Int {
+        // 게시물과 프로그레스바 아이템 뷰를 구분할 기준이 필요하다.
+        return when (differ.currentList[position].postKey) {
+            " " -> VIEW_TYPE_LOADING
+            else -> VIEW_TYPE_ITEM
+        }
+    }
+
+    fun setList(posts: MutableList<Post>) {
+        differ.currentList.addAll(posts)
+        differ.currentList.add(Post(postKey = " ")) // progress bar 넣을 자리
+    }
+
+    fun deleteLoading(){
+        differ.currentList.removeAt(differ.currentList.lastIndex) // 로딩이 완료되면 프로그레스바를 지움
+    }
 }
 
-class TimelineViewHolder2(val binding: ItemPostBinding, val fragment: TimelineFragment) :
+class TimelineViewHolder(val binding: ItemPostBinding, val fragment: TimelineFragment) :
     RecyclerView.ViewHolder(binding.root), View.OnClickListener {
     private lateinit var postKey: String
 
@@ -94,6 +129,10 @@ class TimelineViewHolder2(val binding: ItemPostBinding, val fragment: TimelineFr
         }
     }
 }
+
+class LoadingViewHolder(private val binding: ItemLoadingBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        }
 
 class TimelineDiffUtil2 : DiffUtil.ItemCallback<Post>() {
     override fun areItemsTheSame(oldItem: Post, newItem: Post): Boolean {

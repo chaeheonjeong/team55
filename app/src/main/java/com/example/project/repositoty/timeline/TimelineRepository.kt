@@ -1,9 +1,7 @@
 package com.example.project.repositoty.timeline
 
-import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.ListenerRegistration
+import com.example.project.utils.Constants.Companion.PAGE_NUM
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -16,6 +14,7 @@ class TimelineRepository {
         val postKeyCollection =  db.collection("posts")
             .whereEqualTo("exists", true)
             .orderBy("created_at", Query.Direction.DESCENDING)
+            .limit(PAGE_NUM)
 
         return postKeyCollection
     }

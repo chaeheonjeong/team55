@@ -30,6 +30,9 @@ class TimelineViewModel: ViewModel() {
         query.addSnapshotListener { snapshot, e ->
             if(snapshot == null)
                 return@addSnapshotListener
+
+            // 마지막 데이터가 있는지 확인
+            val lastVisible = snapshot.documents[snapshot.size() - 1]
             // 주어진 데이터(snapshot)으로 posts를 만들어 _posts를 업데이트 해준다.
             _posts.value = makesPosts(snapshot)
         }
@@ -37,12 +40,12 @@ class TimelineViewModel: ViewModel() {
 
     private fun makesPosts(snapshot: QuerySnapshot): List<Post> {
         val documents = snapshot.documents
-        val tempPosts = mutableListOf<Post>()
+        val posts = mutableListOf<Post>()
         for(document in documents) {
             val postValue = document.toObject<Post>()
-            tempPosts.add(postValue!!)
+            posts.add(postValue!!)
         }
 
-        return tempPosts
+        return posts
     }
 }

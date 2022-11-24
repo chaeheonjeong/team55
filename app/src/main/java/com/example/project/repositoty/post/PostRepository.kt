@@ -11,13 +11,11 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 
-// todo 2. comments 에서 user정보 제대로 가져오는 지 확인
 
 class PostRepository(private val postKey: String) {
     private val postCollection = Firebase.firestore.collection("posts")
 
 
-    // todo exists 조건절로 삭제 안한것만 가져오기
     fun getPost(): Task<DocumentSnapshot> {
         val documentRef = postCollection.document(postKey)
         return documentRef.get()
@@ -38,15 +36,12 @@ class PostRepository(private val postKey: String) {
     }
 
 
-    fun getComments(): Task<QuerySnapshot> {
+    fun getComments(): Query {
         val commentsCollection =
             Firebase.firestore.collection("posts/$postKey/comments").orderBy("created_at")
-        return commentsCollection.get()
-    }
+                .orderBy("created_at")
+                .whereEqualTo("exist", true)
 
-    fun getComments2(): Query {
-        return Firebase.firestore.collection("posts/$postKey/comments")
-            .orderBy("created_at")
-            .whereEqualTo("exist", true)
+        return commentsCollection
     }
 }

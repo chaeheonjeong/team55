@@ -88,4 +88,7 @@ dependencies {
 
     // card view
     implementation "androidx.cardview:cardview:1.0.0"
+
+    // 새로고침 기능
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 }

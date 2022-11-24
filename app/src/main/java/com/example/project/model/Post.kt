@@ -16,23 +16,6 @@ data class Post(
     @get:PropertyName("like_count") @set:PropertyName("like_count") var likeCount: Int = 0,
     @get:PropertyName("created_at") @set:PropertyName("created_at") var createdAt: Timestamp = Timestamp.now(),
     @get:PropertyName("writer_uid") @set:PropertyName("writer_uid") var writerUid: String = "",
-    val exists: Boolean = true
-)
-
-data class Comment(
-    @get:PropertyName("comment_key") @set:PropertyName("comment_key") var commentKey: String = "",
-    val content: String = "",
     val exists: Boolean = true,
-    @get:PropertyName("profile_image") @set:PropertyName("profile_image") var profileImage: String = "",
-    val name: String = "",
-    @get:PropertyName("created_at") @set:PropertyName("created_at") var createdAt: Timestamp = Timestamp.now()
 )
 
-data class User(
-    val name: String = "",
-    val email: String = "",
-    val intro: String? = "",
-    @get:PropertyName("profile_image") @set:PropertyName("profile_image") var profileImage: String = "",
-    val posts: List<String>? = null,
-    val friends: List<String>? = null
-)

@@ -10,6 +10,8 @@ import com.example.project.model.Comment
 import com.example.project.model.Post
 import com.example.project.model.User
 import com.example.project.repositoty.post.PostRepository
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -67,42 +69,27 @@ class PostViewModel(postKey: String, val uid: String?): ViewModel() {
         }
     }
 
-    fun loadComments() {
-        val querySnapshot = repository.getComments()
-        querySnapshot.addOnSuccessListener {
-            val comments = mutableListOf<Comment>()
-            for(documentData in it.documents) {
-                documentData.toObject<Comment>()?.let { comment ->
-                    comments.add(comment) }
-            }
+    private fun loadComments() {
+        val queryComments = repository.getComments()
+        updateComments(queryComments)
+    }
 
-            _comments.value = comments
-            Log.d("comments", comments.toString())
+    private fun updateComments(query: Query) {
+        query.addSnapshotListener { snapshot, _ ->
+            if(snapshot == null) return@addSnapshotListener
+
+            _comments.value = makesComments(snapshot)
         }
     }
 
-    // 데이터가 변경할 때마다 데이터를 로드하는 로직
-    // 근데 처음엔 좋은데, 나중엔 변화 되는것만 list만들어서 저장하게 되는거 아냐?
-    // 이게 안되면, 댓글 작성할 떄마다 viewModel 접근해서 변경해보는 식으로 해보자.
-    /*
-    private fun loadComment2() {
-        val query = repository.getComments2()
-        query.addSnapshotListener { snapshot, error ->
-            if (error != null) {
-                Log.w("error", "Listen failed.", error)
-                return@addSnapshotListener
-            }
-
-            val documents = snapshot?.documents
-            if (documents != null) {
-                val tempValue = mutableListOf<Comment>()
-                for (document in documents) {
-                    val comment = document.toObject<Comment>()
-                    tempValue.add(comment!!)
-                }
-                _comments.value = tempValue
-            }
+    private fun makesComments(snapshot: QuerySnapshot): List<Comment> {
+        val documents = snapshot.documents
+        val comments = mutableListOf<Comment>()
+        for(document in documents) {
+            val value = document.toObject<Comment>()
+            comments.add(value!!)
         }
+
+        return comments
     }
-    */
 }

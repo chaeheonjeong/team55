@@ -54,9 +54,6 @@ class PostActivity : AppCompatActivity() {
                 .addOnSuccessListener { document ->
                     document.update(mapOf("comment_key" to document.id))
                     commentValue.commentKey = document.id
-                    //viewModel.updateComments(commentValue)
-                    // 그냥 요거 하면 불러오지 않을까?
-                    viewModel.loadComments()
                     // 키보드 내리기
                     binding.etWriteComment.text = null
                     val inputMethodManager =

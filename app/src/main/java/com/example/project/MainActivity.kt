@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.timeLine -> setFragment(TAG_HOME, TimelineFragment())
                 R.id.Search -> setFragment(TAG_SEARCH, SearchFragment())
                 R.id.Friend -> setFragment(TAG_FRIEND, FriendsList())
-                R.id.Profile ->setFragment(TAG_PROFILE, ProfileFragment())
+                R.id.Profile -> setFragment(TAG_PROFILE, ProfileFragment())
                 R.id.AddPost -> setFragment(TAG_ADD, AddingPostFragment())
             }
             true

@@ -4,6 +4,8 @@ import android.util.Log
 import com.example.project.model.Post
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -13,30 +15,19 @@ import com.google.firebase.ktx.Firebase
 
 class PostRepository(private val postKey: String) {
     private val postCollection = Firebase.firestore.collection("posts")
-    private var post = Post()
 
-    // repository에서 async 이용하면 어떻게든 구현은 가능할 것 같은데
-    // 그렇게 하면 좋은 비동기 처리 방식 냅두고, 기다려야 하는 거니까, 이게 맞는건가 싶음
-//    fun getPost(): Post {
-//        val documentRef = collectionRef.document(postKey)
-//        documentRef.get().addOnSuccessListener { snapshot ->
-//            post = snapshot.toObject<Post>()!!
-//        }
-//
-//        return post
-//    }
 
-    fun getPost2(): Task<DocumentSnapshot> {
+    // todo exists 조건절로 삭제 안한것만 가져오기
+    fun getPost(): Task<DocumentSnapshot> {
         val documentRef = postCollection.document(postKey)
         return documentRef.get()
     }
 
-    fun getComments(): Task<QuerySnapshot> {
-        // todo 이거 경로만 짧게 쓰는 법 있지 않을까?
-        val commentsCollection = postCollection.document(postKey).collection("comments")
-        // Firebase.firestore.collection("posts/$postKey/comments")
-        return commentsCollection.get()
+    fun getWriter(writerUid: String): Task<DocumentSnapshot> {
+        val writerDocument = Firebase.firestore.document("users/$writerUid")
+        return writerDocument.get()
     }
+
 
     fun getUser(uid: String?): Task<DocumentSnapshot> {
         val userDocument = Firebase.firestore.document("users/$uid")
@@ -44,5 +35,18 @@ class PostRepository(private val postKey: String) {
             Log.d("post", "hihi$uid")
         }
         return userDocument.get()
+    }
+
+
+    fun getComments(): Task<QuerySnapshot> {
+        val commentsCollection =
+            Firebase.firestore.collection("posts/$postKey/comments").orderBy("created_at")
+        return commentsCollection.get()
+    }
+
+    fun getComments2(): Query {
+        return Firebase.firestore.collection("posts/$postKey/comments")
+            .orderBy("created_at")
+            .whereEqualTo("exist", true)
     }
 }

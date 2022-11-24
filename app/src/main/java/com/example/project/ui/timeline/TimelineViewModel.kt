@@ -1,14 +1,10 @@
 package com.example.project.ui.timeline
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.project.model.Comment
 import com.example.project.model.Post
-import com.example.project.model.User
-import com.example.project.repositoty.TimelineRepository
-import com.example.project.repositoty.post.PostRepository
+import com.example.project.repositoty.timeline.TimelineRepository
 import com.google.firebase.firestore.ktx.toObject
 
 class TimelineViewModel: ViewModel() {

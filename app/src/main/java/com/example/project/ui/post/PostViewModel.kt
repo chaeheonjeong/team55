@@ -30,10 +30,14 @@ class PostViewModel(postKey: String, val uid: String?): ViewModel() {
     private val _comments = MutableLiveData<List<Comment>>()
     var comments: LiveData<List<Comment>> = _comments
 
+    private val _writer = MutableLiveData<User>()
+    var writer: LiveData<User> = _writer
+
     init {
-        loadPost2()
+        loadPost()
         loadUser()
         loadComments()
+        //loadComment2()
     }
 
 //    private fun loadPost() {
@@ -41,14 +45,30 @@ class PostViewModel(postKey: String, val uid: String?): ViewModel() {
 //        Log.d("post", "viewModel ${post.value?.title}")
 //    }
 
-    private fun loadPost2() {
-        val documentData = repository.getPost2()
+    private fun loadPost() {
+        val documentData = repository.getPost()
         documentData.addOnSuccessListener { snapshot ->
             _post.value = snapshot.toObject<Post>()
+            Log.d("writer", _post.value?.writerUid!!)
+            loadWriter(_post.value?.writerUid!!)
         }
     }
 
-    private fun loadComments() {
+    private fun loadWriter(writerUid: String) {
+        val document = repository.getWriter(writerUid)
+        document.addOnSuccessListener { snapshot ->
+            _writer.value = snapshot.toObject<User>()
+        }
+    }
+
+    private fun loadUser() {
+        val document = repository.getUser(uid)
+        document.addOnSuccessListener { snapshot ->
+            _user.value = snapshot.toObject<User>()
+        }
+    }
+
+    fun loadComments() {
         val querySnapshot = repository.getComments()
         querySnapshot.addOnSuccessListener {
             val comments = mutableListOf<Comment>()
@@ -58,16 +78,32 @@ class PostViewModel(postKey: String, val uid: String?): ViewModel() {
             }
 
             _comments.value = comments
-            Log.d("post", comments.toString())
+            Log.d("comments", comments.toString())
         }
     }
 
-    private fun loadUser() {
-        val document = repository.getUser(uid)
-        document.addOnSuccessListener { snapshot ->
-            val test = snapshot.toObject<User>()
-            _user.value = test
-            Log.d("post", test.toString())
+    // 데이터가 변경할 때마다 데이터를 로드하는 로직
+    // 근데 처음엔 좋은데, 나중엔 변화 되는것만 list만들어서 저장하게 되는거 아냐?
+    // 이게 안되면, 댓글 작성할 떄마다 viewModel 접근해서 변경해보는 식으로 해보자.
+    /*
+    private fun loadComment2() {
+        val query = repository.getComments2()
+        query.addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                Log.w("error", "Listen failed.", error)
+                return@addSnapshotListener
+            }
+
+            val documents = snapshot?.documents
+            if (documents != null) {
+                val tempValue = mutableListOf<Comment>()
+                for (document in documents) {
+                    val comment = document.toObject<Comment>()
+                    tempValue.add(comment!!)
+                }
+                _comments.value = tempValue
+            }
         }
     }
+    */
 }

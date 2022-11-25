@@ -36,14 +36,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //setFragment(TAG_HOME, TimelineFragment())
+        setFragment(TAG_HOME,TimelineFragment())
+
         if (Firebase.auth.currentUser == null) {
             startActivity(
                 Intent(this, LoginActivity::class.java)
             )
             finish()
         }
-
         binding.navigationView.setOnItemSelectedListener { item->
             /*when(item.itemId) {
                 R.id.timeLine -> {
@@ -66,7 +66,6 @@ class MainActivity : AppCompatActivity() {
 
              */
             val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
-
             when(item.itemId){
                 R.id.timeLine ->{
                     val fragmentA = TimelineFragment()

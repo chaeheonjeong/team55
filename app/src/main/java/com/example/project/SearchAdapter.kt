@@ -48,7 +48,6 @@ class SearchAdapter(private var items: List<MyItem>)
         val itemsCollectionRef = db.collection("test")
         val item = items[position]
 
-
         holder.binding.textUserName.text = item.name
         holder.binding.textEmail.text = item.email
         val uid = auth.currentUser?.uid

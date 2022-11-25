@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -35,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setFragment(TAG_HOME, TimelineFragment())
+        //setFragment(TAG_HOME, TimelineFragment())
         if (Firebase.auth.currentUser == null) {
             startActivity(
                 Intent(this, LoginActivity::class.java)
@@ -44,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.navigationView.setOnItemSelectedListener { item->
-            when(item.itemId) {
+            /*when(item.itemId) {
                 R.id.timeLine -> {
                     setFragment(TAG_HOME, TimelineFragment())
                 }
@@ -62,10 +63,76 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             true
+
+             */
+            val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+
+            when(item.itemId){
+                R.id.timeLine ->{
+                    val fragmentA = TimelineFragment()
+                    transaction.replace(R.id.mainFrameLayout,fragmentA, TAG_HOME)
+                }
+                R.id.Search -> {
+                    val fragmentB = SearchFragment()
+                    transaction.replace(R.id.mainFrameLayout,fragmentB, TAG_SEARCH)
+                }
+                R.id.Profile -> {
+                    val fragmentC = FriendsList()
+                    transaction.replace(R.id.mainFrameLayout,fragmentC, TAG_PROFILE)
+                }
+                R.id.Friend -> {
+                    val fragmentD = ProfileFragment()
+                    transaction.replace(R.id.mainFrameLayout,fragmentD, TAG_FRIEND)
+                }
+                R.id.AddPost -> {
+                    val fragmentE = AddingPostFragment()
+                    transaction.replace(R.id.mainFrameLayout,fragmentE, TAG_ADD)
+
+                }
+            }
+            transaction.addToBackStack(null)
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+            transaction.commit()
+
+            true
         }
     }
+    fun onNavigationItemSelected(p0 : MenuItem) : Boolean{
+        val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+
+        when(p0.itemId){
+            R.id.timeLine ->{
+                val fragmentA = TimelineFragment()
+                transaction.replace(R.id.mainFrameLayout,fragmentA, TAG_HOME)
+            }
+            R.id.Search -> {
+                val fragmentB = SearchFragment()
+                transaction.replace(R.id.frame_layout,fragmentB, TAG_SEARCH)
+            }
+            R.id.Profile -> {
+                val fragmentC = FriendsList()
+                transaction.replace(R.id.frame_layout,fragmentC, TAG_PROFILE)
+            }
+            R.id.Friend -> {
+                val fragmentD = ProfileFragment()
+                transaction.replace(R.id.frame_layout,fragmentD, TAG_FRIEND)
+            }
+            R.id.AddPost -> {
+                val fragmentE = AddingPostFragment()
+                transaction.replace(R.id.frame_layout,fragmentE, TAG_ADD)
+
+            }
+        }
+        transaction.addToBackStack(null)
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        transaction.commit()
+        return true
+    }
     override fun onBackPressed() {
-        //super.onBackPressed()
+        super.onBackPressed()
+        val bnv = findViewById<View>(R.id.navigationView) as BottomNavigationView
+        updateBottomMenu(bnv)
+
     }
     private fun setFragment(tag: String, fragment: Fragment) {
         var manager:FragmentManager= supportFragmentManager

@@ -33,8 +33,8 @@ class ModalBottomSheet(private val postKey: String) : BottomSheetDialogFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val title = "이 게시물을 삭제하시겠어요?"
-        val message = "삭제하시면 다시 복구하실 수 없습니다. 그래도 삭제하시겠습니까?"
+        val title = "확인"
+        val message = "게시물을 삭제하시겠습니까?"
         val negative = "삭제 안함"
         val positive = "삭제"
         binding.tvDeletePost.setOnClickListener {
@@ -48,8 +48,8 @@ class ModalBottomSheet(private val postKey: String) : BottomSheetDialogFragment(
                 }
                 .setPositiveButton(positive) { dialog, which ->
                     // Respond to positive button press
-                    Toast.makeText(requireContext(), "삭제되셨습니다.", Toast.LENGTH_SHORT).show()
                     acceptDelete()
+                    Toast.makeText(requireContext(), "삭제되셨습니다.", Toast.LENGTH_SHORT).show()
                     dismiss()
                 }
                 .show()
@@ -64,7 +64,6 @@ class ModalBottomSheet(private val postKey: String) : BottomSheetDialogFragment(
             postRef.get().addOnSuccessListener { document ->
                 val writerUid = document.getField<String>("writer_uid")
                 if(writerUid != uid) {
-                    Toast.makeText(requireContext(), "작성자가 아닙니다.", Toast.LENGTH_SHORT).show()
                     return@addOnSuccessListener
                 }
 

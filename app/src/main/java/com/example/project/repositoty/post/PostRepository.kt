@@ -40,7 +40,7 @@ class PostRepository(private val postKey: String) {
         val commentsCollection =
             Firebase.firestore.collection("posts/$postKey/comments")
                 .orderBy("created_at")
-                .whereEqualTo("exist", true)
+                .whereEqualTo("exists", true)
 
         return commentsCollection
     }

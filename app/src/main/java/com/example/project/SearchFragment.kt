@@ -38,7 +38,7 @@ class SearchFragment : Fragment() {
     ): View? {
         val binding = FragmentSearchBinding.inflate(inflater, container, false)
         val recyclerview = binding.FragrecyclerView
-        adapter = SearchAdapter(emptyList(), requireContext())
+        adapter = SearchAdapter(emptyList(), this)
         recyclerview.layoutManager = LinearLayoutManager(requireContext())
         recyclerview.adapter = adapter
         firestore = FirebaseFirestore.getInstance()

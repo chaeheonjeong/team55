@@ -55,7 +55,7 @@ class FriendsList: Fragment() {
         var forDeleteList: HashMap<String, Any>? = HashMap()
 
         init {
-            db?.collection("users")
+            db.collection("users")
                 .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                     // ArrayList 비워줌
                     friendsList.clear()
@@ -64,7 +64,7 @@ class FriendsList: Fragment() {
 
                     for (snapshot in querySnapshot!!.documents) {
                         if (snapshot.id == userUid) {
-                            tempFriendsList = snapshot["friends"] as ArrayList<String>
+                            tempFriendsList = snapshot["friends"] as ArrayList<String>?
                         }
                         notifyDataSetChanged()
                     }

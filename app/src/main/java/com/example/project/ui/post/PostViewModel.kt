@@ -77,19 +77,18 @@ class PostViewModel(postKey: String, val uid: String?): ViewModel() {
     private fun updateComments(query: Query) {
         query.addSnapshotListener { snapshot, _ ->
             if(snapshot == null) return@addSnapshotListener
-
-            _comments.value = makesComments(snapshot)
+            else _comments.value = makesComments(snapshot)
         }
     }
 
     private fun makesComments(snapshot: QuerySnapshot): List<Comment> {
         val documents = snapshot.documents
-        val comments = mutableListOf<Comment>()
+        val tempComments = mutableListOf<Comment>()
         for(document in documents) {
             val value = document.toObject<Comment>()
-            comments.add(value!!)
+            tempComments.add(value!!)
         }
-
-        return comments
+        Log.d("comments", "makes: $tempComments")
+        return tempComments
     }
 }

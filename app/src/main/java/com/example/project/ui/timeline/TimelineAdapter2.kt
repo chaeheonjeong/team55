@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.widget.Toast
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -17,100 +18,33 @@ import com.example.project.databinding.ItemPostBinding
 import com.example.project.model.Post
 import com.example.project.ui.post.PostActivity
 import com.example.project.ui.timeline.ModalBottomSheet.Companion.TAG
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class TimelineAdapter2(val fragment: TimelineFragment) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val VIEW_TYPE_ITEM = 0
-    private val VIEW_TYPE_LOADING = 1
+    RecyclerView.Adapter<TimelineViewHolder>() {
     var differ = AsyncListDiffer(this, TimelineDiffUtil2())
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when(viewType) {
-            VIEW_TYPE_ITEM -> {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ItemPostBinding.inflate(layoutInflater, parent, false)
-                TimelineViewHolder(binding, fragment)
-            }
-            else -> { // VIEW_TYPE_LOADING
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ItemLoadingBinding.inflate(layoutInflater, parent, false)
-                LoadingViewHolder(binding)
-            }
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TimelineViewHolder {
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val binding = ItemPostBinding.inflate(layoutInflater, parent, false)
+        return TimelineViewHolder(binding, fragment)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if(holder is TimelineViewHolder) {
-            val post = differ.currentList[position]
-            holder.bind(post)
-        } else {
-
-        }
+    override fun onBindViewHolder(holder: TimelineViewHolder, position: Int) {
+        val post = differ.currentList[position]
+        holder.bind(post)
     }
 
     override fun getItemCount(): Int {
         return differ.currentList.size
-    }
-
-    // 뷰의 타입을 정해주는 곳
-    override fun getItemViewType(position: Int): Int {
-        // 게시물과 프로그레스바 아이템 뷰를 구분할 기준이 필요하다.
-        return when (differ.currentList[position].postKey) {
-            " " -> VIEW_TYPE_LOADING
-            else -> VIEW_TYPE_ITEM
-        }
-    }
-
-    fun setList(posts: MutableList<Post>) {
-        differ.currentList.addAll(posts)
-        differ.currentList.add(Post(postKey = " ")) // progress bar 넣을 자리
-    }
-
-    fun deleteLoading(){
-        differ.currentList.removeAt(differ.currentList.lastIndex) // 로딩이 완료되면 프로그레스바를 지움
     }
 }
 
 class TimelineViewHolder(val binding: ItemPostBinding, val fragment: TimelineFragment) :
     RecyclerView.ViewHolder(binding.root), View.OnClickListener {
     private lateinit var postKey: String
-
-    fun bind(post: Post) {
-        this.postKey = post.postKey
-        binding.ivPostImage.setOnClickListener(this)
-        binding.tvPostTitle.text = post.title
-        //setImageUI(post)
-        setImageUI2(post)
-        setItemSettingButton()
-    }
-
-    // todo 이미지 세로 크기에 따른 다르게 세팅하기
-    private fun setImageUI2(post: Post) {
-        binding.root.afterMeasured {
-            Log.d("height", "hh ${this.height} ${this.maxHeight}" +
-                    " // ${binding.cardViewPost.height} // ${binding.ivPostImage.height}")
-            Glide.with(context)
-                .load(post.postImage)
-                .override(200, 1000)
-                .into(binding.ivPostImage)
-        }
-    }
-
-    /*
-
-    }*/
-    // define 'afterMeasured' layout listener:
-    private inline fun <T : View> T.afterMeasured(crossinline f: T.() -> Unit) {
-        viewTreeObserver.addOnGlobalLayoutListener(object :
-            ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                if (measuredWidth > 0 && measuredHeight > 0) {
-                    viewTreeObserver.removeOnGlobalLayoutListener(this)
-                    f()
-                }
-            }
-        })
-    }
+    private val currentUid = Firebase.auth.currentUser!!.uid
 
     // post 클릭 시 이동하도록 설정 해보기
     override fun onClick(view: View) {
@@ -123,16 +57,31 @@ class TimelineViewHolder(val binding: ItemPostBinding, val fragment: TimelineFra
         }
     }
 
-    private fun setItemSettingButton() {
+    fun bind(post: Post) {
+        this.postKey = post.postKey
+        binding.ivPostImage.setOnClickListener(this)
+        binding.tvPostTitle.text = post.title
+        setItemSettingButton(post.writerUid)
+        setImageUI(post)
+    }
+
+
+    private fun setImageUI(post: Post) {
+        Glide.with(fragment)
+            .load(post.postImage)
+            .into(binding.ivPostImage)
+    }
+
+    private fun setItemSettingButton(writerUid: String) {
         binding.buttonSettingPost.setOnClickListener {
-            ModalBottomSheet(postKey).show(fragment.parentFragmentManager, TAG)
+            if(writerUid == currentUid)
+                ModalBottomSheet(postKey).show(fragment.parentFragmentManager, TAG)
+            else
+                Toast.makeText(fragment.requireContext(), "작성자만 삭제할 수 있습니다.", Toast.LENGTH_SHORT).show()
         }
     }
-}
 
-class LoadingViewHolder(private val binding: ItemLoadingBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        }
+}
 
 class TimelineDiffUtil2 : DiffUtil.ItemCallback<Post>() {
     override fun areItemsTheSame(oldItem: Post, newItem: Post): Boolean {

@@ -1,0 +1,556 @@
+Index: app/src/main/java/com/example/project/FriendUser.kt
+===================================================================
+diff --git a/app/src/main/java/com/example/project/FriendUser.kt b/app/src/main/java/com/example/project/FriendUser.kt
+deleted file mode 100644
+--- a/app/src/main/java/com/example/project/FriendUser.kt	(revision 07c23cbc937f4bf9440ddcc7b2630f965e3a95cf)
++++ /dev/null	(revision 07c23cbc937f4bf9440ddcc7b2630f965e3a95cf)
+@@ -1,3 +0,0 @@
+-package com.example.project
+-
+-data class FriendUser(var name : String? = null)
+\ No newline at end of file
+Index: app/src/main/java/com/example/project/FriendsList.kt
+===================================================================
+diff --git a/app/src/main/java/com/example/project/FriendsList.kt b/app/src/main/java/com/example/project/FriendsList.kt
+deleted file mode 100644
+--- a/app/src/main/java/com/example/project/FriendsList.kt	(revision 07c23cbc937f4bf9440ddcc7b2630f965e3a95cf)
++++ /dev/null	(revision 07c23cbc937f4bf9440ddcc7b2630f965e3a95cf)
+@@ -1,87 +0,0 @@
+-package com.example.project
+-
+-import android.app.Activity
+-import android.content.Context
+-import android.os.Bundle
+-import android.view.LayoutInflater
+-import android.view.View
+-import android.view.ViewGroup
+-import android.widget.ListView
+-import android.widget.TextView
+-import androidx.fragment.app.Fragment
+-import androidx.recyclerview.widget.LinearLayoutManager
+-import androidx.recyclerview.widget.RecyclerView
+-import com.google.firebase.firestore.ktx.firestore
+-import com.google.firebase.firestore.ktx.getField
+-import com.google.firebase.ktx.Firebase
+-
+-class FriendsList: Fragment() {
+-    val db = Firebase.firestore
+-
+-    override fun onAttach(context: Context) {
+-        super.onAttach(context)
+-    }
+-
+-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+-        val view = inflater.inflate(R.layout.friendslist, container, false)
+-
+-        var recyclerview = view.findViewById<RecyclerView>(R.id.recyclerview)
+-        recyclerview.adapter = RecyclerViewAdapter()
+-        recyclerview.layoutManager = LinearLayoutManager(context as Activity)
+-
+-        return view
+-    }
+-
+-    inner class RecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+-        val userUid = "x3kojX3jFWX9O5MJoStwXiMBNB83"
+-        // Person 클래스 ArrayList 생성성
+-        var FriendsList : ArrayList<FriendUser> = arrayListOf()
+-        var tempFriendsList : ArrayList<String> = arrayListOf()
+-
+-        init {
+-            db?.collection("users")?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+-                // ArrayList 비워줌
+-                FriendsList.clear()
+-                tempFriendsList.clear()
+-
+-                for (snapshot in querySnapshot!!.documents) {
+-                    if (snapshot.id == userUid) {
+-                        tempFriendsList = snapshot["friends"] as ArrayList<String>
+-                    }
+-                    notifyDataSetChanged()
+-                }
+-                for (snapshot in querySnapshot!!.documents) {
+-                    for(i in tempFriendsList) {
+-                        if (snapshot.id == i) {
+-                            var item = snapshot.toObject(FriendUser::class.java)
+-                            FriendsList.add(item!!)
+-                        }
+-                        notifyDataSetChanged()
+-                    }
+-                }
+-            }
+-        }
+-
+-        // xml파일을 inflate하여 ViewHolder를 생성
+-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+-            var view = LayoutInflater.from(parent.context).inflate(R.layout.friendslist_item, parent, false)
+-            return ViewHolder(view)
+-        }
+-
+-        inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+-        }
+-
+-        // onCreateViewHolder에서 만든 view와 실제 데이터를 연결
+-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+-            var viewHolder = (holder as ViewHolder).itemView
+-
+-            var name = viewHolder.findViewById<TextView>(R.id.name)
+-            name.text = FriendsList[position].name
+-        }
+-
+-        // 리사이클러뷰의 아이템 총 개수 반환
+-        override fun getItemCount(): Int {
+-            return FriendsList.size
+-        }
+-    }
+-}
+Index: app/src/main/res/menu/navi_menu.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<menu xmlns:android=\"http://schemas.android.com/apk/res/android\">\r\n\r\n    <item\r\n        android:id=\"@+id/timeLine\"\r\n        android:icon=\"@drawable/home\"\r\n        android:title=\"타임라인\"/>\r\n\r\n    <item\r\n        android:id=\"@+id/Search\"\r\n        android:icon=\"@drawable/search\"\r\n        android:title=\"검색\"/>\r\n    <item\r\n        android:id=\"@+id/Profile\"\r\n        android:icon=\"@drawable/user\"\r\n        android:title=\"프로필\"\r\n        />\r\n    <item\r\n        android:id=\"@+id/Friend\"\r\n        android:icon=\"@drawable/list\"\r\n        android:title=\"친구 목록\"\r\n        />\r\n    <item\r\n        android:id=\"@+id/AddPost\"\r\n        android:title=\"포스트 추가\"\r\n        />\r\n</menu>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/menu/navi_menu.xml b/app/src/main/res/menu/navi_menu.xml
+--- a/app/src/main/res/menu/navi_menu.xml	(revision 07c23cbc937f4bf9440ddcc7b2630f965e3a95cf)
++++ b/app/src/main/res/menu/navi_menu.xml	(date 1669390862150)
+@@ -22,6 +22,7 @@
+         />
+     <item
+         android:id="@+id/AddPost"
++        android:icon="@drawable/write"
+         android:title="포스트 추가"
+         />
+ </menu>
+Index: app/src/main/res/layout/activity_main.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\">\r\n\r\n\r\n    <FrameLayout\r\n        android:id=\"@+id/mainFrameLayout\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\" >\r\n\r\n    </FrameLayout>\r\n\r\n    <com.google.android.material.bottomnavigation.BottomNavigationView\r\n        android:id=\"@+id/navigationView\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_weight=\"1\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:menu=\"@menu/navi_menu\" >\r\n\r\n    </com.google.android.material.bottomnavigation.BottomNavigationView>\r\n\r\n\r\n</androidx.constraintlayout.widget.ConstraintLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_main.xml b/app/src/main/res/layout/activity_main.xml
+--- a/app/src/main/res/layout/activity_main.xml	(revision 07c23cbc937f4bf9440ddcc7b2630f965e3a95cf)
++++ b/app/src/main/res/layout/activity_main.xml	(date 1669392169430)
+@@ -16,12 +16,15 @@
+     <com.google.android.material.bottomnavigation.BottomNavigationView
+         android:id="@+id/navigationView"
+         android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        android:layout_weight="1"
++        android:layout_height="60dp"
++        android:layout_gravity="start"
++        android:background="@color/white"
++        app:itemIconTint="@drawable/icon_selector_color"
++        app:itemTextColor="@drawable/icon_selector_color"
+         app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+-        app:menu="@menu/navi_menu" >
++        app:menu="@menu/navi_menu">
+ 
+     </com.google.android.material.bottomnavigation.BottomNavigationView>
+ 
+Index: app/src/main/res/layout/item.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"wrap_content\"\r\n    android:orientation=\"horizontal\"\r\n    android:padding=\"5dp\">\r\n\r\n    <TextView\r\n        android:id=\"@+id/textUserName\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_weight=\"1\"\r\n        android:text=\"TextView\" />\r\n\r\n    <TextView\r\n        android:id=\"@+id/textEmail\"\r\n        android:layout_width=\"111dp\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_weight=\"1\"\r\n        android:text=\"TextView\" />\r\n\r\n    <androidx.appcompat.widget.AppCompatButton\r\n        android:id=\"@+id/AddBtn\"\r\n        android:background=\"#03A9F4\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_weight=\"1\"\r\n        android:text=\"친구 추가\" />\r\n\r\n</LinearLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/item.xml b/app/src/main/res/layout/item.xml
+--- a/app/src/main/res/layout/item.xml	(revision 07c23cbc937f4bf9440ddcc7b2630f965e3a95cf)
++++ b/app/src/main/res/layout/item.xml	(date 1669224668723)
+@@ -1,30 +1,60 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:layout_width="match_parent"
++    android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+-    android:orientation="horizontal"
++    android:orientation="vertical"
+     android:padding="5dp">
+ 
++    <LinearLayout
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:gravity="center_vertical"
++        android:padding="10dp">
+     <TextView
+         android:id="@+id/textUserName"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+-        android:layout_weight="1"
++        android:layout_marginLeft="5dp"
++        android:layout_gravity="center|right"
++        android:textSize="16sp"
+         android:text="TextView" />
+ 
+-    <TextView
+-        android:id="@+id/textEmail"
+-        android:layout_width="111dp"
+-        android:layout_height="wrap_content"
+-        android:layout_weight="1"
+-        android:text="TextView" />
++        <View
++            android:layout_width="0dp"
++            android:layout_height="0dp"
++            android:layout_weight="1"/>
++
++        <TextView
++            android:id="@+id/textEmail"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:layout_gravity="center|right"
++            android:layout_marginLeft="30dp"
++            android:text="TextView"
++            android:textSize="16sp" />
+ 
+-    <androidx.appcompat.widget.AppCompatButton
++        <View
++            android:layout_width="0dp"
++            android:layout_height="0dp"
++            android:layout_weight="1"/>
++
++        <Button
+         android:id="@+id/AddBtn"
+-        android:background="#03A9F4"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+-        android:layout_weight="1"
+-        android:text="친구 추가" />
++        android:layout_gravity="center|right"
++        android:layout_marginRight="5dp"
++        android:background="@drawable/add_btn_states"
++        android:minWidth="0dp"
++        android:minHeight="0dp"
++        android:paddingLeft="25dp"
++        android:paddingTop="10dp"
++        android:paddingRight="25dp"
++        android:paddingBottom="10dp"
++        android:text="추가"
++        android:textColor="@color/white"
++        />
++
++    </LinearLayout>
+ 
+ </LinearLayout>
+\ No newline at end of file
+Index: app/src/main/res/layout/fragment_search.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<FrameLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    tools:context=\".SearchFragment\">\r\n\r\n    <!-- TODO: Update blank fragment layout -->\r\n    <LinearLayout\r\n        android:id=\"@+id/linearLayout\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"horizontal\">\r\n\r\n        <EditText\r\n            android:id=\"@+id/searchWord\"\r\n            android:layout_width=\"0dp\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_weight=\"1\"\r\n            android:layout_marginStart=\"30dp\"\r\n            android:layout_marginEnd=\"30dp\"\r\n            android:hint=\"입력 하는 곳.\"\r\n            android:inputType=\"text\"\r\n            android:minHeight=\"48dp\" />\r\n\r\n        <Button\r\n            android:id=\"@+id/search\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_marginEnd=\"30dp\"\r\n            android:text=\"검색하기\" />\r\n\r\n    </LinearLayout>\r\n\r\n    <androidx.recyclerview.widget.RecyclerView\r\n        android:id=\"@+id/FragrecyclerView\"\r\n        android:layout_width=\"387dp\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginStart=\"8dp\"\r\n        android:layout_marginTop=\"90dp\"\r\n        android:layout_marginEnd=\"8dp\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        />\r\n\r\n    <TextView\r\n        android:id=\"@+id/showID\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginStart=\"18dp\"\r\n        android:layout_marginTop=\"60dp\"\r\n        android:textSize=\"20sp\"\r\n        android:textColor=\"@color/black\"\r\n        android:textStyle=\"bold\"\r\n        android:text=\"아이디\" />\r\n    <TextView\r\n        android:id=\"@+id/showEmail\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginStart=\"180dp\"\r\n        android:layout_marginTop=\"60dp\"\r\n        android:textSize=\"20sp\"\r\n        android:textColor=\"@color/black\"\r\n        android:textStyle=\"bold\"\r\n        android:text=\"이메일\" />\r\n\r\n</FrameLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_search.xml b/app/src/main/res/layout/fragment_search.xml
+--- a/app/src/main/res/layout/fragment_search.xml	(revision 07c23cbc937f4bf9440ddcc7b2630f965e3a95cf)
++++ b/app/src/main/res/layout/fragment_search.xml	(date 1669227561375)
+@@ -7,62 +7,76 @@
+     tools:context=".SearchFragment">
+ 
+     <!-- TODO: Update blank fragment layout -->
+-    <LinearLayout
+-        android:id="@+id/linearLayout"
+-        android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        android:orientation="horizontal">
+-
++    <RelativeLayout
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content">
+         <EditText
+             android:id="@+id/searchWord"
+-            android:layout_width="0dp"
++            android:layout_width="380dp"
+             android:layout_height="wrap_content"
+             android:layout_weight="1"
+-            android:layout_marginStart="30dp"
+-            android:layout_marginEnd="30dp"
+-            android:hint="입력 하는 곳."
++            android:layout_marginTop="20dp"
++            android:layout_marginStart="20dp"
++            android:layout_marginEnd="40dp"
++            android:paddingLeft="23dp"
++            android:background="@drawable/round_corner"
++            android:hint="찾을 사용자의 이름을 입력하세요"
++            android:textSize = "17sp"
+             android:inputType="text"
+             android:minHeight="48dp" />
+ 
+-        <Button
++
++        <ImageButton
+             android:id="@+id/search"
+-            android:layout_width="wrap_content"
+-            android:layout_height="wrap_content"
+-            android:layout_marginEnd="30dp"
+-            android:text="검색하기" />
+-
+-    </LinearLayout>
++            android:layout_width="50dp"
++            android:layout_height="48dp"
++            android:layout_gravity="center|right"
++            android:layout_marginStart="321dp"
++            android:layout_marginTop="20dp"
++            android:layout_marginEnd="0dp"
++            android:layout_marginBottom="20dp"
++            android:background="@drawable/search_tbutton"
++            android:scaleType="centerInside"
++            android:src="@drawable/search_icon_resize"/>
++    </RelativeLayout>
+ 
+     <androidx.recyclerview.widget.RecyclerView
+         android:id="@+id/FragrecyclerView"
+         android:layout_width="387dp"
+         android:layout_height="wrap_content"
+         android:layout_marginStart="8dp"
+-        android:layout_marginTop="90dp"
++        android:layout_marginTop="130dp"
+         android:layout_marginEnd="8dp"
+         app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+         />
+ 
++
++    <View
++        android:layout_width="match_parent"
++        android:layout_height="1dp"
++        android:layout_marginHorizontal="10dp"
++        android:background="#aaa" />
++
+     <TextView
+         android:id="@+id/showID"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+-        android:layout_marginStart="18dp"
+-        android:layout_marginTop="60dp"
+-        android:textSize="20sp"
+-        android:textColor="@color/black"
++        android:layout_marginStart="23dp"
++        android:layout_marginTop="100dp"
++        android:textSize="15sp"
+         android:textStyle="bold"
++        android:textColor="@color/gray"
+         android:text="아이디" />
+     <TextView
+         android:id="@+id/showEmail"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+-        android:layout_marginStart="180dp"
+-        android:layout_marginTop="60dp"
+-        android:textSize="20sp"
+-        android:textColor="@color/black"
++        android:layout_marginStart="170dp"
++        android:layout_marginTop="100dp"
++        android:textSize="15sp"
++        android:textColor="@color/gray"
+         android:textStyle="bold"
+         android:text="이메일" />
+ 
+Index: app/src/main/java/com/example/project/SearchAdapter.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.project\r\n\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport androidx.recyclerview.widget.RecyclerView\r\nimport com.example.project.databinding.ItemBinding\r\nimport com.google.firebase.auth.FirebaseAuth\r\nimport com.google.firebase.auth.ktx.auth\r\nimport com.google.firebase.firestore.FieldValue\r\nimport com.google.firebase.firestore.FirebaseFirestore\r\nimport com.google.firebase.firestore.QueryDocumentSnapshot\r\nimport com.google.firebase.firestore.ktx.firestore\r\nimport com.google.firebase.ktx.Firebase\r\n\r\ndata class MyItem(val id: String, val name: String,val email:String) {\r\n    constructor(doc: QueryDocumentSnapshot) :\r\n            this(doc.id, doc[\"name\"].toString(), doc[\"email\"].toString()\r\n            )\r\n    constructor(key: String, map: Map<*, *>) :\r\n            this(key, map[\"name\"].toString(), map[\"email\"].toString())\r\n}\r\n\r\nclass SearchViewHolder(val binding: ItemBinding) : RecyclerView.ViewHolder(binding.root)\r\n\r\nclass SearchAdapter(private var items: List<MyItem>)\r\n    : RecyclerView.Adapter<SearchViewHolder>() {\r\n\r\n    private val db: FirebaseFirestore = Firebase.firestore\r\n    private var auth: FirebaseAuth = Firebase.auth\r\n\r\n    fun interface OnItemClickListener {\r\n        fun onItemClick(student_id: String)\r\n    }\r\n\r\n    private var itemClickListener: OnItemClickListener? = null\r\n\r\n    fun setOnItemClickListener(listener: OnItemClickListener) {\r\n        itemClickListener = listener\r\n    }\r\n\r\n    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int ): SearchViewHolder {\r\n        val inflater = LayoutInflater.from(parent.context)\r\n        val binding: ItemBinding = ItemBinding.inflate(inflater, parent, false)\r\n        return SearchViewHolder(binding)\r\n    }\r\n    override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {\r\n        val itemsCollectionRef = db.collection(\"test\")\r\n        val item = items[position]\r\n\r\n\r\n        holder.binding.textUserName.text = item.name\r\n        holder.binding.textEmail.text = item.email\r\n        val uid = auth.currentUser?.uid\r\n\r\n        holder.binding.AddBtn.setOnClickListener {\r\n            FirebaseFirestore.getInstance().collection(\"test\").document(uid!!)\r\n                .update(\"friends\", FieldValue.arrayUnion(item.name))\r\n                .addOnSuccessListener {\r\n                    println(\"친구 추가 성공 + ${item.name}\")\r\n                }.addOnFailureListener { println(\"친구 추가 실패 + name : ${item.name}\") }\r\n        }\r\n    }\r\n    override fun getItemCount() = items.size\r\n\r\n    fun updateList(newList: List<MyItem>) {\r\n        items = newList\r\n        notifyDataSetChanged()\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/project/SearchAdapter.kt b/app/src/main/java/com/example/project/SearchAdapter.kt
+--- a/app/src/main/java/com/example/project/SearchAdapter.kt	(revision 07c23cbc937f4bf9440ddcc7b2630f965e3a95cf)
++++ b/app/src/main/java/com/example/project/SearchAdapter.kt	(date 1669227338040)
+@@ -59,6 +59,8 @@
+                 .addOnSuccessListener {
+                     println("친구 추가 성공 + ${item.name}")
+                 }.addOnFailureListener { println("친구 추가 실패 + name : ${item.name}") }
++
++            holder.binding.AddBtn.isSelected = holder.binding.AddBtn.isSelected != true
+         }
+     }
+     override fun getItemCount() = items.size
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    package=\"com.example.project\">\r\n\r\n    <uses-permission android:name=\"android.permission.INTERNET\" />\r\n    <uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\"/>\r\n\r\n    <application\r\n        android:allowBackup=\"true\"\r\n        android:icon=\"@mipmap/ic_launcher\"\r\n        android:label=\"@string/app_name\"\r\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\r\n        android:supportsRtl=\"true\"\r\n        android:theme=\"@style/Theme.Project.NoActionbar\">\r\n        <activity\r\n            android:name=\".LoginActivity\"\r\n            android:exported=\"false\">\r\n            <meta-data\r\n                android:name=\"android.app.lib_name\"\r\n                android:value=\"\" />\r\n        </activity>\r\n        <activity\r\n            android:name=\".SignUpActivity\"\r\n            android:exported=\"false\">\r\n            <meta-data\r\n                android:name=\"android.app.lib_name\"\r\n                android:value=\"\" />\r\n        </activity>\r\n        <activity\r\n            android:name=\".Profile\"\r\n            android:exported=\"true\" />\r\n        <activity\r\n            android:name=\".ui.TestActivity\"\r\n            android:exported=\"true\" />\r\n        <activity\r\n            android:name=\".MainActivity\"\r\n            android:exported=\"true\">\r\n\r\n            <intent-filter>\r\n                <action android:name=\"android.intent.action.MAIN\" />\r\n                <category android:name=\"android.intent.category.LAUNCHER\" />\r\n            </intent-filter>\r\n        </activity>\r\n    </application>\r\n\r\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+--- a/app/src/main/AndroidManifest.xml	(revision 07c23cbc937f4bf9440ddcc7b2630f965e3a95cf)
++++ b/app/src/main/AndroidManifest.xml	(date 1669389065575)
+@@ -41,6 +41,9 @@
+                 <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
+         </activity>
++        <activity
++            android:name=".cogjs.FriendProfile"
++            android:exported="true" />
+     </application>
+ 
+ </manifest>
+\ No newline at end of file
+Index: app/src/main/res/layout/friendslist.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    android:orientation=\"vertical\"\r\n    tools:context=\".MainActivity\">\r\n\r\n    <TextView\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_margin=\"20dp\"\r\n        android:text=\"친구\"\r\n        android:textSize=\"20sp\"\r\n        android:textColor=\"#000\"\r\n        android:textStyle=\"bold\"/>\r\n\r\n    <androidx.recyclerview.widget.RecyclerView\r\n        android:id=\"@+id/recyclerview\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        app:layoutManager=\"androidx.recyclerview.widget.LinearLayoutManager\"/>\r\n</LinearLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/friendslist.xml b/app/src/main/res/layout/friendslist.xml
+--- a/app/src/main/res/layout/friendslist.xml	(revision 07c23cbc937f4bf9440ddcc7b2630f965e3a95cf)
++++ b/app/src/main/res/layout/friendslist.xml	(date 1669380529135)
+@@ -10,7 +10,9 @@
+     <TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+-        android:layout_margin="20dp"
++        android:layout_gravity="center"
++        android:layout_marginTop="20dp"
++        android:layout_marginBottom="20dp"
+         android:text="친구"
+         android:textSize="20sp"
+         android:textColor="#000"
+Index: app/src/main/java/com/example/project/SearchFragment.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.project\r\n\r\nimport android.R\r\nimport android.content.Context\r\nimport android.os.Bundle\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport android.widget.*\r\nimport androidx.appcompat.app.AlertDialog\r\nimport androidx.fragment.app.Fragment\r\nimport androidx.recyclerview.widget.LinearLayoutManager\r\nimport androidx.recyclerview.widget.RecyclerView\r\nimport com.example.project.databinding.FragmentSearchBinding\r\nimport com.google.firebase.auth.FirebaseAuth\r\nimport com.google.firebase.auth.ktx.auth\r\nimport com.google.firebase.firestore.FirebaseFirestore\r\nimport com.google.firebase.firestore.ktx.firestore\r\nimport com.google.firebase.ktx.Firebase\r\n\r\n\r\nclass SearchFragment : Fragment() {\r\n    private var firestore : FirebaseFirestore? = null\r\n    private val db: FirebaseFirestore = Firebase.firestore\r\n    private val itemsCollectionRef = db.collection(\"test\")\r\n    private var adapter: SearchAdapter? = null\r\n    private var auth: FirebaseAuth = Firebase.auth\r\n    private var isSame:Boolean = false\r\n\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        super.onCreate(savedInstanceState)\r\n\r\n    }\r\n\r\n    override fun onCreateView(\r\n        inflater: LayoutInflater, container: ViewGroup?,\r\n        savedInstanceState: Bundle?\r\n    ): View? {\r\n        val binding = FragmentSearchBinding.inflate(inflater, container, false)\r\n        val recyclerview = binding.FragrecyclerView\r\n\r\n        recyclerview.layoutManager = LinearLayoutManager(requireContext())\r\n        adapter = SearchAdapter(emptyList())\r\n        recyclerview.adapter = adapter\r\n        firestore = FirebaseFirestore.getInstance()\r\n\r\n        //updateList()\r\n\r\n        binding.search.setOnClickListener {\r\n            queryWhere(binding)\r\n        }\r\n\r\n        return binding.root\r\n    }\r\n\r\n    private fun queryWhere(binding: FragmentSearchBinding) {\r\n        val p = binding.searchWord.text.toString()\r\n        println(isSame)\r\n        itemsCollectionRef.get().addOnSuccessListener {\r\n            val uid = auth.currentUser?.uid\r\n            for (doc in it) {\r\n                if(p == doc[\"name\"].toString()) {\r\n                    println(\"=====${doc[\"name\"].toString()}====\")\r\n                    println(\"=====${p}=====\")\r\n                    isSame = true\r\n                    println(isSame)\r\n                }\r\n            }\r\n        }\r\n        if(!isSame) {\r\n            Toast.makeText(this.activity, \"정확하게 다시 검색해주세요(자기자신 검색X).\", Toast.LENGTH_SHORT).show()\r\n        }\r\n        else {\r\n            println(isSame)\r\n            itemsCollectionRef.whereEqualTo(\"name\", p).get()\r\n                .addOnSuccessListener {\r\n                    val items = arrayListOf<String>()\r\n                    val results = mutableListOf<MyItem>()\r\n                    for (doc in it) {\r\n                        items.add(\"${doc[\"name\"]} - ${doc[\"email\"]}\")\r\n                        results.add(MyItem(doc))\r\n                    }\r\n                    adapter?.updateList(results)\r\n                    //binding.result.text = items.toString()\r\n\r\n                }\r\n                .addOnFailureListener {\r\n                }\r\n        }\r\n    }\r\n    private fun updateList() {\r\n        itemsCollectionRef.get().addOnSuccessListener {\r\n            val items = mutableListOf<MyItem>()\r\n            for (doc in it) {\r\n                items.add(MyItem(doc))\r\n            }\r\n            adapter?.updateList(items)\r\n        }\r\n    }\r\n    companion object {\r\n\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/project/SearchFragment.kt b/app/src/main/java/com/example/project/SearchFragment.kt
+--- a/app/src/main/java/com/example/project/SearchFragment.kt	(revision 07c23cbc937f4bf9440ddcc7b2630f965e3a95cf)
++++ b/app/src/main/java/com/example/project/SearchFragment.kt	(date 1669226225092)
+@@ -4,6 +4,7 @@
+ import android.content.Context
+ import android.os.Bundle
+ import android.view.LayoutInflater
++import android.view.MotionEvent
+ import android.view.View
+ import android.view.ViewGroup
+ import android.widget.*
+@@ -68,7 +69,7 @@
+             }
+         }
+         if(!isSame) {
+-            Toast.makeText(this.activity, "정확하게 다시 검색해주세요(자기자신 검색X).", Toast.LENGTH_SHORT).show()
++            Toast.makeText(this.activity, "정확하게 다시 검색해주세요. (자기 자신은 검색 할 수 없습니다)", Toast.LENGTH_SHORT).show()
+         }
+         else {
+             println(isSame)
+Index: app/src/main/java/com/example/project/cogjs/FriendsList.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.project.cogjs\r\n\r\nimport android.os.Bundle\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport android.widget.Button\r\nimport android.widget.ImageView\r\nimport android.widget.TextView\r\nimport androidx.fragment.app.Fragment\r\nimport androidx.recyclerview.widget.RecyclerView\r\nimport com.bumptech.glide.Glide\r\nimport com.example.project.MainActivity\r\nimport com.example.project.R\r\nimport com.example.project.databinding.FriendslistBinding\r\nimport com.google.firebase.firestore.FieldValue\r\nimport com.google.firebase.firestore.ktx.firestore\r\nimport com.google.firebase.ktx.Firebase\r\nimport com.google.firebase.storage.ktx.storage\r\n\r\nclass FriendsList: Fragment() {\r\n    val db = Firebase.firestore\r\n    val storage = Firebase.storage\r\n\r\n    lateinit var  mainActivity: MainActivity\r\n    lateinit var binding: FriendslistBinding\r\n    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {\r\n        binding = FriendslistBinding.inflate(layoutInflater, container, false)\r\n\r\n        return binding.root\r\n    }\r\n\r\n    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {\r\n        super.onViewCreated(view, savedInstanceState)\r\n        val recyclerView = binding.recyclerview\r\n        recyclerView.adapter = RecyclerViewAdapter()\r\n\r\n    }\r\n\r\n    inner class RecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {\r\n        val userUid = \"rQHofGPQx3OYR8T4rjI9W9wPCla2\"\r\n\r\n        // Person 클래스 ArrayList 생성성\r\n        var friendsList: ArrayList<FriendUser> = arrayListOf()\r\n        var tempFriendsList: ArrayList<String>? = arrayListOf()\r\n        var forDeleteList: HashMap<String, Any>? = HashMap()\r\n\r\n        init {\r\n            db?.collection(\"users\")\r\n                .addSnapshotListener { querySnapshot, firebaseFirestoreException ->\r\n                    // ArrayList 비워줌\r\n                    friendsList.clear()\r\n                    tempFriendsList?.clear()\r\n                    forDeleteList?.clear()\r\n\r\n                    for (snapshot in querySnapshot!!.documents) {\r\n                        if (snapshot.id == userUid) {\r\n                            tempFriendsList = snapshot[\"friends\"] as ArrayList<String>\r\n                        }\r\n                        notifyDataSetChanged()\r\n                    }\r\n\r\n                    for (snapshot in querySnapshot!!.documents) {\r\n                        for (i in tempFriendsList!!) {\r\n                            if (snapshot.id == i) {\r\n                                var item = snapshot.toObject(FriendUser::class.java)\r\n                                friendsList.add(item!!)\r\n                                forDeleteList?.put(i, item)\r\n                            }\r\n                            notifyDataSetChanged()\r\n                        }\r\n                    }\r\n                }\r\n        }\r\n\r\n        // xml파일을 inflate하여 ViewHolder를 생성\r\n        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {\r\n            var view = LayoutInflater.from(parent.context)\r\n                .inflate(R.layout.friendslist_item, parent, false)\r\n            return ViewHolder(view)\r\n        }\r\n\r\n        inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {\r\n        }\r\n\r\n        // onCreateViewHolder에서 만든 view와 실제 데이터를 연결\r\n        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {\r\n            var viewHolder = (holder as ViewHolder).itemView\r\n\r\n            var name = viewHolder.findViewById<TextView>(R.id.name)\r\n            name.text = friendsList[position].name\r\n\r\n            var profile = viewHolder.findViewById<ImageView>(R.id.friend_profile)\r\n            Glide.with(holder.itemView.context).load(friendsList[position].profileImage)\r\n                .into(profile)\r\n\r\n\r\n            var delete = viewHolder.findViewById<Button>(R.id.delete)\r\n            delete.setOnClickListener {\r\n            val deleteUid1 = forDeleteList?.filterValues { it == friendsList[position]}?.keys.toString()\r\n                val deleteUid2 = deleteUid1.replace(\"[\",\"\").replace(\"]\",\"\")\r\n            //Toast.makeText(context, \"${deleteUid2}\", Toast.LENGTH_SHORT).show()\r\n                db.collection(\"users\").document(userUid)\r\n                    .update(\"friends\", FieldValue.arrayRemove(\"$deleteUid2\"))\r\n            }\r\n        }\r\n\r\n            // 리사이클러뷰의 아이템 총 개수 반환\r\n            override fun getItemCount(): Int {\r\n                return friendsList.size\r\n            }\r\n\r\n        }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/project/cogjs/FriendsList.kt b/app/src/main/java/com/example/project/cogjs/FriendsList.kt
+--- a/app/src/main/java/com/example/project/cogjs/FriendsList.kt	(revision 07c23cbc937f4bf9440ddcc7b2630f965e3a95cf)
++++ b/app/src/main/java/com/example/project/cogjs/FriendsList.kt	(date 1669381681384)
+@@ -1,6 +1,9 @@
+ package com.example.project.cogjs
+ 
++import android.annotation.SuppressLint
++import android.content.Intent
+ import android.os.Bundle
++import android.text.TextUtils.replace
+ import android.view.LayoutInflater
+ import android.view.View
+ import android.view.ViewGroup
+@@ -10,6 +13,7 @@
+ import androidx.fragment.app.Fragment
+ import androidx.recyclerview.widget.RecyclerView
+ import com.bumptech.glide.Glide
++import com.example.project.cogjs.FriendProfile
+ import com.example.project.MainActivity
+ import com.example.project.R
+ import com.example.project.databinding.FriendslistBinding
+@@ -21,9 +25,13 @@
+ class FriendsList: Fragment() {
+     val db = Firebase.firestore
+     val storage = Firebase.storage
+-
++    private var fragmentFriendProfile = FriendProfile()
++    lateinit var profile:ImageView
+     lateinit var  mainActivity: MainActivity
+     lateinit var binding: FriendslistBinding
++    lateinit var deleteUid1: String
++    lateinit var deleteUid2: String
++
+     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+         binding = FriendslistBinding.inflate(layoutInflater, container, false)
+ 
+@@ -77,6 +85,16 @@
+         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+             var view = LayoutInflater.from(parent.context)
+                 .inflate(R.layout.friendslist_item, parent, false)
++
++            /*profile = view.findViewById(R.id.friend_profile)
++            profile.setOnClickListener(object: View.OnClickListener{
++                override fun onClick(p0: View?) {
++                    val intent = Intent(context, FriendProfile::class.java)
++                    intent.putExtra("friendUid", deleteUid2)
++                    startActivity(intent)
++                }
++            })*/
++
+             return ViewHolder(view)
+         }
+ 
+@@ -84,7 +102,7 @@
+         }
+ 
+         // onCreateViewHolder에서 만든 view와 실제 데이터를 연결
+-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
++        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, @SuppressLint("RecyclerView") position: Int) {
+             var viewHolder = (holder as ViewHolder).itemView
+ 
+             var name = viewHolder.findViewById<TextView>(R.id.name)
+@@ -94,15 +112,24 @@
+             Glide.with(holder.itemView.context).load(friendsList[position].profileImage)
+                 .into(profile)
+ 
+-
+             var delete = viewHolder.findViewById<Button>(R.id.delete)
+             delete.setOnClickListener {
+-            val deleteUid1 = forDeleteList?.filterValues { it == friendsList[position]}?.keys.toString()
+-                val deleteUid2 = deleteUid1.replace("[","").replace("]","")
+             //Toast.makeText(context, "${deleteUid2}", Toast.LENGTH_SHORT).show()
++                deleteUid1 = forDeleteList?.filterValues { it == friendsList[position]}?.keys.toString()
++                deleteUid2 = deleteUid1.replace("[","").replace("]","")
+                 db.collection("users").document(userUid)
+                     .update("friends", FieldValue.arrayRemove("$deleteUid2"))
+             }
++
++           profile.setOnClickListener(object: View.OnClickListener{
++                override fun onClick(p0: View?) {
++                    deleteUid1 = forDeleteList?.filterValues { it == friendsList[position]}?.keys.toString()
++                    deleteUid2 = deleteUid1.replace("[","").replace("]","")
++                    val intent = Intent(context, FriendProfile::class.java)
++                    intent.putExtra("friendUid", deleteUid2)
++                    startActivity(intent)
++                }
++            })
+         }
+ 
+             // 리사이클러뷰의 아이템 총 개수 반환
+Index: app/src/main/res/values/dimens.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><resources>\r\n    <!-- Default screen margins, per the Android Design guidelines. -->\r\n    <dimen name=\"activity_horizontal_margin\">16dp</dimen>\r\n    <dimen name=\"activity_vertical_margin\">16dp</dimen>\r\n</resources>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/values/dimens.xml b/app/src/main/res/values/dimens.xml
+--- a/app/src/main/res/values/dimens.xml	(revision 07c23cbc937f4bf9440ddcc7b2630f965e3a95cf)
++++ b/app/src/main/res/values/dimens.xml	(date 1669392169398)
+@@ -1,5 +1,8 @@
+-<resources>
++<resources xmlns:tools="http://schemas.android.com/tools">
+     <!-- Default screen margins, per the Android Design guidelines. -->
+     <dimen name="activity_horizontal_margin">16dp</dimen>
+     <dimen name="activity_vertical_margin">16dp</dimen>
++    <dimen name="design_bottom_navigation_text_size" tools:override="true">12sp</dimen>
++    <dimen name="design_bottom_navigation_active_text_size" tools:override="true">12sp</dimen>
++    <dimen name="design_bottom_navigation_height" tools:override="true">70dp</dimen>
+ </resources>
+\ No newline at end of file

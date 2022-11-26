@@ -1,0 +1,345 @@
+Index: app/src/main/res/layout/activity_main.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\">\r\n\r\n    <androidx.fragment.app.FragmentContainerView\r\n        android:id=\"@+id/fragmentContainerView\"\r\n        android:name=\"com.example.project.FriendsList\"\r\n        android:layout_width=\"0dp\"\r\n        android:layout_height=\"0dp\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintHorizontal_bias=\"0.0\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\"\r\n        app:layout_constraintVertical_bias=\"0.0\" />\r\n\r\n</androidx.constraintlayout.widget.ConstraintLayout>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_main.xml b/app/src/main/res/layout/activity_main.xml
+--- a/app/src/main/res/layout/activity_main.xml	(revision da07343a9f28cc2f39dc9683242a80c08d21f2ce)
++++ b/app/src/main/res/layout/activity_main.xml	(date 1669050277617)
+@@ -7,7 +7,7 @@
+ 
+     <androidx.fragment.app.FragmentContainerView
+         android:id="@+id/fragmentContainerView"
+-        android:name="com.example.project.FriendsList"
++        android:name="com.example.project.cogjs.FriendsList"
+         android:layout_width="0dp"
+         android:layout_height="0dp"
+         app:layout_constraintBottom_toBottomOf="parent"
+@@ -15,6 +15,7 @@
+         app:layout_constraintHorizontal_bias="0.0"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toTopOf="parent"
+-        app:layout_constraintVertical_bias="0.0" />
++        app:layout_constraintVertical_bias="0.0"
++        tools:layout="@layout/friendslist" />
+ 
+ </androidx.constraintlayout.widget.ConstraintLayout>
+Index: app/src/main/java/com/example/project/FriendUser.kt
+===================================================================
+diff --git a/app/src/main/java/com/example/project/FriendUser.kt b/app/src/main/java/com/example/project/FriendUser.kt
+deleted file mode 100644
+--- a/app/src/main/java/com/example/project/FriendUser.kt	(revision da07343a9f28cc2f39dc9683242a80c08d21f2ce)
++++ /dev/null	(revision da07343a9f28cc2f39dc9683242a80c08d21f2ce)
+@@ -1,3 +0,0 @@
+-package com.example.project
+-
+-data class FriendUser(var name : String? = null)
+\ No newline at end of file
+Index: app/src/main/java/com/example/project/FriendsList.kt
+===================================================================
+diff --git a/app/src/main/java/com/example/project/FriendsList.kt b/app/src/main/java/com/example/project/FriendsList.kt
+deleted file mode 100644
+--- a/app/src/main/java/com/example/project/FriendsList.kt	(revision da07343a9f28cc2f39dc9683242a80c08d21f2ce)
++++ /dev/null	(revision da07343a9f28cc2f39dc9683242a80c08d21f2ce)
+@@ -1,87 +0,0 @@
+-package com.example.project
+-
+-import android.app.Activity
+-import android.content.Context
+-import android.os.Bundle
+-import android.view.LayoutInflater
+-import android.view.View
+-import android.view.ViewGroup
+-import android.widget.ListView
+-import android.widget.TextView
+-import androidx.fragment.app.Fragment
+-import androidx.recyclerview.widget.LinearLayoutManager
+-import androidx.recyclerview.widget.RecyclerView
+-import com.google.firebase.firestore.ktx.firestore
+-import com.google.firebase.firestore.ktx.getField
+-import com.google.firebase.ktx.Firebase
+-
+-class FriendsList: Fragment() {
+-    val db = Firebase.firestore
+-
+-    override fun onAttach(context: Context) {
+-        super.onAttach(context)
+-    }
+-
+-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+-        val view = inflater.inflate(R.layout.friendslist, container, false)
+-
+-        var recyclerview = view.findViewById<RecyclerView>(R.id.recyclerview)
+-        recyclerview.adapter = RecyclerViewAdapter()
+-        recyclerview.layoutManager = LinearLayoutManager(context as Activity)
+-
+-        return view
+-    }
+-
+-    inner class RecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+-        val userUid = "x3kojX3jFWX9O5MJoStwXiMBNB83"
+-        // Person 클래스 ArrayList 생성성
+-        var FriendsList : ArrayList<FriendUser> = arrayListOf()
+-        var tempFriendsList : ArrayList<String> = arrayListOf()
+-
+-        init {
+-            db?.collection("users")?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+-                // ArrayList 비워줌
+-                FriendsList.clear()
+-                tempFriendsList.clear()
+-
+-                for (snapshot in querySnapshot!!.documents) {
+-                    if (snapshot.id == userUid) {
+-                        tempFriendsList = snapshot["friends"] as ArrayList<String>
+-                    }
+-                    notifyDataSetChanged()
+-                }
+-                for (snapshot in querySnapshot!!.documents) {
+-                    for(i in tempFriendsList) {
+-                        if (snapshot.id == i) {
+-                            var item = snapshot.toObject(FriendUser::class.java)
+-                            FriendsList.add(item!!)
+-                        }
+-                        notifyDataSetChanged()
+-                    }
+-                }
+-            }
+-        }
+-
+-        // xml파일을 inflate하여 ViewHolder를 생성
+-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+-            var view = LayoutInflater.from(parent.context).inflate(R.layout.friendslist_item, parent, false)
+-            return ViewHolder(view)
+-        }
+-
+-        inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+-        }
+-
+-        // onCreateViewHolder에서 만든 view와 실제 데이터를 연결
+-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+-            var viewHolder = (holder as ViewHolder).itemView
+-
+-            var name = viewHolder.findViewById<TextView>(R.id.name)
+-            name.text = FriendsList[position].name
+-        }
+-
+-        // 리사이클러뷰의 아이템 총 개수 반환
+-        override fun getItemCount(): Int {
+-            return FriendsList.size
+-        }
+-    }
+-}
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>plugins {\r\n    id 'com.android.application'\r\n    id 'org.jetbrains.kotlin.android'\r\n\r\n    id 'com.google.gms.google-services'\r\n    id 'com.google.firebase.crashlytics'\r\n}\r\n\r\nandroid {\r\n    compileSdk 33\r\n\r\n    defaultConfig {\r\n        applicationId \"com.example.project\"\r\n        minSdk 28\r\n        targetSdk 33\r\n        versionCode 1\r\n        versionName \"1.0\"\r\n\r\n        testInstrumentationRunner \"androidx.test.runner.AndroidJUnitRunner\"\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            minifyEnabled false\r\n            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\r\n        }\r\n    }\r\n    compileOptions {\r\n        sourceCompatibility JavaVersion.VERSION_1_8\r\n        targetCompatibility JavaVersion.VERSION_1_8\r\n    }\r\n    kotlinOptions {\r\n        jvmTarget = '1.8'\r\n    }\r\n\r\n    buildFeatures{\r\n        viewBinding = true\r\n    }\r\n}\r\n\r\ndependencies {\r\n\r\n    implementation 'androidx.core:core-ktx:1.7.0'\r\n    implementation 'androidx.appcompat:appcompat:1.5.1'\r\n    implementation 'com.google.android.material:material:1.7.0'\r\n    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'\r\n    implementation 'com.google.android.gms:play-services-vision-common:19.1.3'\r\n    testImplementation 'junit:junit:4.13.2'\r\n    androidTestImplementation 'androidx.test.ext:junit:1.1.3'\r\n    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'\r\n    implementation 'com.google.firebase:firebase-crashlytics-ktx'\r\n    implementation 'com.google.firebase:firebase-config-ktx'\r\n    implementation 'androidx.fragment:fragment-ktx:1.5.4'\r\n    implementation 'androidx.cardview:cardview:1.0.0'\r\n    implementation 'androidx.recyclerview:recyclerview:1.1.0'\r\n\r\n    // firebase connect\r\n    implementation platform('com.google.firebase:firebase-bom:31.0.2')\r\n    implementation 'com.google.firebase:firebase-analytics-ktx'\r\n\r\n    // fire store\r\n    implementation 'com.google.firebase:firebase-firestore-ktx'\r\n\r\n    // fire storage\r\n    implementation 'com.google.firebase:firebase-storage-ktx'\r\n\r\n    // fire auth\r\n    implementation 'com.google.firebase:firebase-auth-ktx:21.1.0'\r\n\r\n    // circleImageView\r\n    implementation 'de.hdodenhof:circleimageview:3.1.0'\r\n\r\n    // Glide\r\n    implementation 'com.github.bumptech.glide:glide:4.11.0'\r\n    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'\r\n\r\n    // Coroutine\r\n    implementation \"org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4\"\r\n    // viewModelScope\r\n    implementation \"androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0-alpha03\"\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle b/app/build.gradle
+--- a/app/build.gradle	(revision da07343a9f28cc2f39dc9683242a80c08d21f2ce)
++++ b/app/build.gradle	(date 1668711528362)
+@@ -78,4 +78,6 @@
+     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+     // viewModelScope
+     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0-alpha03"
++
++    // yejun
+ }
+\ No newline at end of file
+Index: app/src/main/res/values/themes.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><resources xmlns:tools=\"http://schemas.android.com/tools\">\r\n    <!-- Base application theme. -->\r\n    <style name=\"Theme.Project.NoActionbar\" parent=\"Theme.MaterialComponents.DayNight.NoActionBar\">\r\n        <!-- Primary brand color. -->\r\n        <item name=\"colorPrimary\">@color/purple_500</item>\r\n        <item name=\"colorPrimaryVariant\">@color/purple_700</item>\r\n        <item name=\"colorOnPrimary\">@color/white</item>\r\n        <!-- Secondary brand color. -->\r\n        <item name=\"colorSecondary\">@color/teal_200</item>\r\n        <item name=\"colorSecondaryVariant\">@color/teal_700</item>\r\n        <item name=\"colorOnSecondary\">@color/black</item>\r\n        <!-- Status bar color. -->\r\n        <item name=\"android:statusBarColor\" tools:targetApi=\"l\">?attr/colorPrimaryVariant</item>\r\n        <!-- Customize your theme here. -->\r\n    </style>\r\n</resources>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/values/themes.xml b/app/src/main/res/values/themes.xml
+--- a/app/src/main/res/values/themes.xml	(revision da07343a9f28cc2f39dc9683242a80c08d21f2ce)
++++ b/app/src/main/res/values/themes.xml	(date 1669047516078)
+@@ -1,6 +1,6 @@
+ <resources xmlns:tools="http://schemas.android.com/tools">
+     <!-- Base application theme. -->
+-    <style name="Theme.Project.NoActionbar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
++    <style name="Theme.Project.NoActionbar" parent="Theme.AppCompat.DayNight.NoActionBar">
+         <!-- Primary brand color. -->
+         <item name="colorPrimary">@color/purple_500</item>
+         <item name="colorPrimaryVariant">@color/purple_700</item>
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    package=\"com.example.project\">\r\n    <uses-permission android:name=\"android.permission.INTERNET\" />\r\n    <application\r\n        android:allowBackup=\"true\"\r\n        android:icon=\"@mipmap/ic_launcher\"\r\n        android:label=\"@string/app_name\"\r\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\r\n        android:supportsRtl=\"true\"\r\n        android:theme=\"@style/Theme.Project.NoActionbar\">\r\n        <activity\r\n            android:name=\".MainActivity\"\r\n            android:exported=\"false\">\r\n        </activity>\r\n\r\n        <activity\r\n            android:name=\".SignUp\"\r\n            android:exported=\"false\">\r\n        </activity>\r\n\r\n        <activity android:name=\".ui.TestActivity\"\r\n            android:exported=\"true\">\r\n        <intent-filter>\r\n            <action android:name=\"android.intent.action.MAIN\" />\r\n            <category android:name=\"android.intent.category.LAUNCHER\" />\r\n        </intent-filter>\r\n        </activity>\r\n\r\n    </application>\r\n\r\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+--- a/app/src/main/AndroidManifest.xml	(revision da07343a9f28cc2f39dc9683242a80c08d21f2ce)
++++ b/app/src/main/AndroidManifest.xml	(date 1669086376860)
+@@ -10,7 +10,7 @@
+         android:supportsRtl="true"
+         android:theme="@style/Theme.Project.NoActionbar">
+         <activity
+-            android:name=".MainActivity"
++            android:name=".ui.TestActivity"
+             android:exported="false">
+         </activity>
+ 
+@@ -19,7 +19,7 @@
+             android:exported="false">
+         </activity>
+ 
+-        <activity android:name=".ui.TestActivity"
++        <activity android:name=".cogjs.CogjsActivity"
+             android:exported="true">
+         <intent-filter>
+             <action android:name="android.intent.action.MAIN" />
+Index: app/src/main/res/layout/friendslist.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    tools:context=\".MainActivity\">\r\n\r\n    <androidx.recyclerview.widget.RecyclerView\r\n        android:id=\"@+id/recyclerview\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\" />\r\n</androidx.constraintlayout.widget.ConstraintLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/friendslist.xml b/app/src/main/res/layout/friendslist.xml
+--- a/app/src/main/res/layout/friendslist.xml	(revision da07343a9f28cc2f39dc9683242a80c08d21f2ce)
++++ b/app/src/main/res/layout/friendslist.xml	(date 1669049732316)
+@@ -1,13 +1,24 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
++<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     xmlns:tools="http://schemas.android.com/tools"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
++    android:orientation="vertical"
+     tools:context=".MainActivity">
+ 
++    <TextView
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:layout_margin="20dp"
++        android:text="친구"
++        android:textSize="20sp"
++        android:textColor="#000"
++        android:textStyle="bold"/>
++
+     <androidx.recyclerview.widget.RecyclerView
+         android:id="@+id/recyclerview"
+         android:layout_width="match_parent"
+-        android:layout_height="match_parent" />
+-</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
++        android:layout_height="wrap_content"
++        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
++</LinearLayout>
+\ No newline at end of file
+Index: app/src/main/res/layout/friendslist_item.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"wrap_content\">\r\n\r\n    <androidx.cardview.widget.CardView\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        app:cardCornerRadius=\"0dp\"\r\n        app:cardElevation=\"5dp\"\r\n        app:cardUseCompatPadding=\"true\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\">\r\n\r\n        <androidx.constraintlayout.widget.ConstraintLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"match_parent\">\r\n\r\n            <TextView\r\n                android:id=\"@+id/name\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_marginStart=\"32dp\"\r\n                android:layout_marginTop=\"8dp\"\r\n                android:layout_marginEnd=\"100dp\"\r\n                android:layout_marginBottom=\"8dp\"\r\n                android:text=\"이름\"\r\n                android:textSize=\"24sp\"\r\n                app:layout_constraintBottom_toBottomOf=\"parent\"\r\n                app:layout_constraintEnd_toEndOf=\"parent\"\r\n                app:layout_constraintStart_toStartOf=\"parent\"\r\n                app:layout_constraintTop_toTopOf=\"parent\" />\r\n\r\n            <Button\r\n                android:id=\"@+id/button\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_marginEnd=\"16dp\"\r\n                android:text=\"삭제\"\r\n                app:layout_constraintEnd_toEndOf=\"parent\"\r\n                app:layout_constraintTop_toTopOf=\"parent\" />\r\n\r\n        </androidx.constraintlayout.widget.ConstraintLayout>\r\n\r\n    </androidx.cardview.widget.CardView>\r\n</androidx.constraintlayout.widget.ConstraintLayout>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/friendslist_item.xml b/app/src/main/res/layout/friendslist_item.xml
+--- a/app/src/main/res/layout/friendslist_item.xml	(revision da07343a9f28cc2f39dc9683242a80c08d21f2ce)
++++ b/app/src/main/res/layout/friendslist_item.xml	(date 1669048906898)
+@@ -1,50 +1,56 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
++<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     xmlns:tools="http://schemas.android.com/tools"
+     android:layout_width="match_parent"
+-    android:layout_height="wrap_content">
+-
+-    <androidx.cardview.widget.CardView
+-        android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        app:cardCornerRadius="0dp"
+-        app:cardElevation="5dp"
+-        app:cardUseCompatPadding="true"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent">
++    android:layout_height="wrap_content"
++    android:orientation="vertical">
+ 
+-        <androidx.constraintlayout.widget.ConstraintLayout
+-            android:layout_width="match_parent"
+-            android:layout_height="match_parent">
++    <LinearLayout
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:gravity="center_vertical"
++        android:padding="10dp">
++
++        <de.hdodenhof.circleimageview.CircleImageView
++            android:id="@+id/friend_profile"
++            android:layout_width="50dp"
++            android:layout_height="50dp" />
+ 
+-            <TextView
+-                android:id="@+id/name"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:layout_marginStart="32dp"
+-                android:layout_marginTop="8dp"
+-                android:layout_marginEnd="100dp"
+-                android:layout_marginBottom="8dp"
+-                android:text="이름"
+-                android:textSize="24sp"
+-                app:layout_constraintBottom_toBottomOf="parent"
+-                app:layout_constraintEnd_toEndOf="parent"
+-                app:layout_constraintStart_toStartOf="parent"
+-                app:layout_constraintTop_toTopOf="parent" />
++        <TextView
++            android:id="@+id/name"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:layout_marginLeft="30dp"
++            android:text="이름"
++            android:textSize="16sp" />
++
++        <View
++            android:layout_width="0dp"
++            android:layout_height="0dp"
++            android:layout_weight="1"/>
+ 
+-            <Button
+-                android:id="@+id/button"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:layout_marginEnd="16dp"
+-                android:text="삭제"
+-                app:layout_constraintEnd_toEndOf="parent"
+-                app:layout_constraintTop_toTopOf="parent" />
++        <Button
++            android:id="@+id/delete"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:layout_gravity="center|right"
++            android:layout_marginRight="10dp"
++            android:background="@drawable/friendlist_button"
++            android:minWidth="0dp"
++            android:minHeight="0dp"
++            android:paddingLeft="25dp"
++            android:paddingTop="10dp"
++            android:paddingRight="25dp"
++            android:paddingBottom="10dp"
++            android:text="삭제"
++            android:textColor="@color/white" />
+ 
+-        </androidx.constraintlayout.widget.ConstraintLayout>
++    </LinearLayout>
+ 
+-    </androidx.cardview.widget.CardView>
+-</androidx.constraintlayout.widget.ConstraintLayout>
++    <View
++        android:layout_width="match_parent"
++        android:layout_height="1dp"
++        android:layout_marginHorizontal="10dp"
++        android:background="#aaa" />
++</LinearLayout>

@@ -18,6 +18,7 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+
         </activity>
         <activity
             android:name=".SignUpActivity"
@@ -46,7 +47,7 @@
             
         <activity
             android:name=".cogjs.FriendProfile"
-            android:exported="true" />
+            android:exported="false" />
     </application>
 
 </manifest>

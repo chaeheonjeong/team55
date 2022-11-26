@@ -41,6 +41,10 @@ class PostActivity : AppCompatActivity() {
 
         setFollowingButton(currentUser)
         setBackButton()
+
+        binding.layoutWriter.setOnClickListener {
+
+        }
     }
 
     private fun setBackButton() {

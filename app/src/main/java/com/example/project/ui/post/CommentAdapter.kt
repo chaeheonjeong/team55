@@ -50,7 +50,7 @@ class CommentAdapter(val context: Context): ListAdapter<Comment, CommentAdapter.
         val direction= RelativeDateTimeFormatter.Direction.LAST
         val relativeUnit: RelativeDateTimeFormatter.RelativeUnit
 
-        if(currentTime < 60){
+        if(currentTime < 60) {
             view.text = "방금 전"
             return
         }

@@ -40,9 +40,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        
         <activity android:name=".ui.post.PostActivity"
             android:exported="false" />
+            
+        <activity
+            android:name=".cogjs.FriendProfile"
+            android:exported="true" />
     </application>
 
 </manifest>

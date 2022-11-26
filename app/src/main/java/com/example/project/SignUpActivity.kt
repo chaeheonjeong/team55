@@ -89,7 +89,9 @@ class SignUpActivity : AppCompatActivity() {
                         "passwd" to password,
                         "year" to Useryear,
                         "month" to Usermonth+1,
-                        "day" to Userday
+                        "day" to Userday,
+                        "introduce" to "자기 소개",
+                        "profile_image" to "https://firebasestorage.googleapis.com/v0/b/team55-65c21.appspot.com/o/upload_images%2Fpro2.bmp?alt=media&token=eb9c3b4f-0e34-4af8-bac8-2cbafc1160b4"
                     )
                     itemsCollectionRef.document(uid!!).set(itemMap)
                         .addOnSuccessListener{ }.addOnFailureListener { }

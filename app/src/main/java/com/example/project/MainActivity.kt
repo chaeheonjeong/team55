@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setFragment(TAG_HOME,TimelineFragment())
+        //setFragment(TAG_HOME,TimelineFragment())
 
         if (Firebase.auth.currentUser == null) {
             startActivity(
@@ -45,26 +45,6 @@ class MainActivity : AppCompatActivity() {
             finish()
         }
         binding.navigationView.setOnItemSelectedListener { item->
-            /*when(item.itemId) {
-                R.id.timeLine -> {
-                    setFragment(TAG_HOME, TimelineFragment())
-                }
-                R.id.Search -> {
-                    setFragment(TAG_SEARCH, SearchFragment())
-                }
-                R.id.Friend -> {
-                    setFragment(TAG_FRIEND, FriendsList())
-                }
-                R.id.Profile -> {
-                    setFragment(TAG_PROFILE, ProfileFragment())
-                }
-                R.id.AddPost -> {
-                    setFragment(TAG_ADD, AddingPostFragment())
-                }
-            }
-            true
-
-             */
             val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
             when(item.itemId){
                 R.id.timeLine ->{
@@ -141,56 +121,6 @@ class MainActivity : AppCompatActivity() {
             ft.add(R.id.mainFrameLayout, fragment, tag)
         }
 
-        val home = manager.findFragmentByTag(TAG_HOME)
-        val search = manager.findFragmentByTag(TAG_SEARCH)
-        val friend = manager.findFragmentByTag(TAG_FRIEND)
-        val profile = manager.findFragmentByTag(TAG_PROFILE)
-        val add = manager.findFragmentByTag(TAG_ADD)
-
-        //모든 프래그먼트 hide
-        if(home!=null){
-            ft.hide(home)
-        }
-        if(search!=null){
-            ft.hide(search)
-        }
-        if(friend!=null){
-            ft.hide(friend)
-        }
-        if(profile!=null){
-            ft.hide(profile)
-        }
-        if(add!=null) {
-            ft.hide(add)
-        }
-
-        //선택한 항목에 따라 그에 맞는 프래그먼트만 show
-        if(tag == TAG_HOME){
-            if(home!=null){
-                ft.show(home)
-            }
-        }
-        else if(tag == TAG_SEARCH){
-            if(search!=null){
-                ft.show(search)
-            }
-        }
-        else if(tag == TAG_FRIEND){
-            if(friend!=null){
-                ft.show(friend)
-            }
-        }
-        else if(tag == TAG_PROFILE){
-            if(profile!=null){
-                ft.show(profile)
-            }
-        }
-        else if(tag == TAG_ADD){
-            if(add!=null){
-                ft.show(add)
-            }
-        }
-        //마무리
         ft.commitAllowingStateLoss()
 
     }

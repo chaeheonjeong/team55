@@ -17,6 +17,7 @@ import com.example.project.cogjs.FriendProfile
 import com.example.project.MainActivity
 import com.example.project.R
 import com.example.project.databinding.FriendslistBinding
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -46,7 +47,7 @@ class FriendsList: Fragment() {
     }
 
     inner class RecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-        val userUid = "rQHofGPQx3OYR8T4rjI9W9wPCla2"
+        val userUid = Firebase.auth.currentUser?.uid
 
         // Person 클래스 ArrayList 생성성
         var friendsList: ArrayList<FriendUser> = arrayListOf()
@@ -117,8 +118,10 @@ class FriendsList: Fragment() {
             //Toast.makeText(context, "${deleteUid2}", Toast.LENGTH_SHORT).show()
                 deleteUid1 = forDeleteList?.filterValues { it == friendsList[position]}?.keys.toString()
                 deleteUid2 = deleteUid1.replace("[","").replace("]","")
-                db.collection("users").document(userUid)
-                    .update("friends", FieldValue.arrayRemove("$deleteUid2"))
+                if (userUid != null) {
+                    db.collection("users").document(userUid)
+                        .update("friends", FieldValue.arrayRemove("$deleteUid2"))
+                }
             }
 
            profile.setOnClickListener(object: View.OnClickListener{

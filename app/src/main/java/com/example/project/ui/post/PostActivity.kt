@@ -1,5 +1,6 @@
 package com.example.project.ui.post
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
@@ -7,6 +8,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.example.project.cogjs.FriendProfile
 import com.example.project.databinding.ActivityPostBinding
 import com.example.project.model.Comment
 import com.example.project.model.Post
@@ -41,9 +43,15 @@ class PostActivity : AppCompatActivity() {
 
         setFollowingButton(currentUser)
         setBackButton()
+        setClickWriter()
+    }
 
+    private fun setClickWriter() {
         binding.layoutWriter.setOnClickListener {
-
+            val writerUid = viewModel.writer.value?.uid
+            val intent = Intent(this, FriendProfile::class.java)
+            intent.putExtra("friendUid", writerUid)
+            startActivity(intent)
         }
     }
 

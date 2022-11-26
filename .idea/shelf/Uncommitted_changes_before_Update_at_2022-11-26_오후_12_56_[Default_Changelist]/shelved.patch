@@ -1,0 +1,290 @@
+Index: app/src/main/res/layout/fragment_search.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<FrameLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    tools:context=\".SearchFragment\">\r\n\r\n    <!-- TODO: Update blank fragment layout -->\r\n    <RelativeLayout\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\">\r\n        <EditText\r\n            android:id=\"@+id/searchWord\"\r\n            android:layout_width=\"380dp\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_weight=\"1\"\r\n            android:layout_marginTop=\"20dp\"\r\n            android:layout_marginStart=\"20dp\"\r\n            android:layout_marginEnd=\"40dp\"\r\n            android:paddingLeft=\"23dp\"\r\n            android:background=\"@drawable/round_corner\"\r\n            android:hint=\"찾을 사용자의 이름을 입력하세요\"\r\n            android:textSize = \"17sp\"\r\n            android:inputType=\"text\"\r\n            android:minHeight=\"48dp\" />\r\n\r\n\r\n        <ImageButton\r\n            android:id=\"@+id/search\"\r\n            android:layout_width=\"50dp\"\r\n            android:layout_height=\"48dp\"\r\n            android:layout_gravity=\"center|right\"\r\n            android:layout_marginStart=\"321dp\"\r\n            android:layout_marginTop=\"20dp\"\r\n            android:layout_marginEnd=\"0dp\"\r\n            android:layout_marginBottom=\"20dp\"\r\n            android:background=\"@drawable/search_tbutton\"\r\n            android:scaleType=\"centerInside\"\r\n            android:src=\"@drawable/search_icon_resize\"/>\r\n    </RelativeLayout>\r\n\r\n    <androidx.recyclerview.widget.RecyclerView\r\n        android:id=\"@+id/FragrecyclerView\"\r\n        android:layout_width=\"387dp\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginStart=\"8dp\"\r\n        android:layout_marginTop=\"130dp\"\r\n        android:layout_marginEnd=\"8dp\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        />\r\n\r\n\r\n    <View\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"1dp\"\r\n        android:layout_marginHorizontal=\"10dp\"\r\n        android:background=\"#aaa\" />\r\n\r\n    <TextView\r\n        android:id=\"@+id/showID\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginStart=\"23dp\"\r\n        android:layout_marginTop=\"100dp\"\r\n        android:textSize=\"15sp\"\r\n        android:textStyle=\"bold\"\r\n        android:textColor=\"@color/gray\"\r\n        android:text=\"아이디\" />\r\n    <TextView\r\n        android:id=\"@+id/showEmail\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginStart=\"170dp\"\r\n        android:layout_marginTop=\"100dp\"\r\n        android:textSize=\"15sp\"\r\n        android:textColor=\"@color/gray\"\r\n        android:textStyle=\"bold\"\r\n        android:text=\"이메일\" />\r\n\r\n</FrameLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_search.xml b/app/src/main/res/layout/fragment_search.xml
+--- a/app/src/main/res/layout/fragment_search.xml	(revision d09ae043ed2a7c2cbdb2287b7c74a5da73d33f08)
++++ b/app/src/main/res/layout/fragment_search.xml	(date 1669434320300)
+@@ -33,7 +33,7 @@
+             android:layout_gravity="center|right"
+             android:layout_marginStart="321dp"
+             android:layout_marginTop="20dp"
+-            android:layout_marginEnd="0dp"
++            android:layout_marginEnd="20dp"
+             android:layout_marginBottom="20dp"
+             android:background="@drawable/search_tbutton"
+             android:scaleType="centerInside"
+@@ -53,11 +53,12 @@
+         />
+ 
+ 
+-    <View
+-        android:layout_width="match_parent"
+-        android:layout_height="1dp"
+-        android:layout_marginHorizontal="10dp"
+-        android:background="#aaa" />
++<!--    <View-->
++<!--        android:layout_width="match_parent"-->
++<!--        android:layout_height="1dp"-->
++<!--        toptop-->
++<!--        android:layout_marginHorizontal="10dp"-->
++<!--        android:background="#aaa" />-->
+ 
+     <TextView
+         android:id="@+id/showID"
+Index: app/src/main/java/com/example/project/cogjs/FriendProfile.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.project.cogjs\r\n\r\nimport android.content.ContentValues.TAG\r\nimport android.content.Intent\r\nimport android.net.Uri\r\nimport android.os.Bundle\r\nimport android.util.Log\r\nimport android.view.View\r\nimport android.widget.ImageView\r\nimport androidx.activity.result.ActivityResultLauncher\r\nimport androidx.activity.result.contract.ActivityResultContracts\r\nimport androidx.appcompat.app.AppCompatActivity\r\nimport com.bumptech.glide.Glide\r\nimport com.bumptech.glide.request.RequestOptions\r\nimport com.example.project.CustomDialog\r\nimport com.example.project.MS.PostData\r\nimport com.example.project.R\r\nimport com.example.project.databinding.ActivityFriendProfileBinding\r\nimport com.google.firebase.auth.ktx.auth\r\nimport com.google.firebase.firestore.ktx.firestore\r\nimport com.google.firebase.firestore.ktx.toObject\r\nimport com.google.firebase.ktx.Firebase\r\nimport com.google.firebase.storage.ktx.storage\r\n\r\nclass FriendProfile: AppCompatActivity() {\r\n    private lateinit var postImages: List<String>\r\n    var friendUid : String = \"\"\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        super.onCreate(savedInstanceState)\r\n        val binding = ActivityFriendProfileBinding.inflate(layoutInflater)\r\n        setContentView(binding.root)\r\n\r\n        friendUid = intent.getStringExtra(\"friendUid\").toString()\r\n\r\n        var editMode = false\r\n        val dialog = CustomDialog(this)\r\n        val db = Firebase.firestore\r\n        val itemsCollectionRef = db.collection(\"users\")\r\n        val user = Firebase.auth.currentUser?.uid\r\n\r\n        val list = ArrayList<PostData>()\r\n        //list.add(PostData(, \"1\"))\r\n\r\n\r\n        fun getProfileImage() {\r\n            Firebase.firestore.collection(\"users\").document(\"$friendUid\")\r\n                .addSnapshotListener { documentSnapshot, _ ->\r\n                    if (documentSnapshot == null) return@addSnapshotListener\r\n                    if (documentSnapshot.data != null) {\r\n                        val url = documentSnapshot.data!![\"profile_image\"]\r\n                        Glide.with(applicationContext).load(url).apply(RequestOptions()).into(binding.profilePic)\r\n                    }\r\n                }\r\n        }\r\n\r\n        fun atStart() = itemsCollectionRef.document(\"$friendUid\").get().addOnSuccessListener {\r\n            getProfileImage()\r\n            binding.nicknameTextview.text = it[\"name\"] as CharSequence?\r\n            binding.IntroduceTextview.text = it[\"introduce\"] as CharSequence?\r\n            binding.recyclerView\r\n        }\r\n\r\n        atStart()\r\n\r\n        //binding.profilePic.setImageResource(R.drawable.pro2)\r\n\r\n        binding.profilePic.setOnClickListener {\r\n            if (editMode) {\r\n                val intent = Intent()\r\n                intent.type = \"image/*\"\r\n                intent.action = Intent.ACTION_GET_CONTENT\r\n                launcher.launch(intent)\r\n            }\r\n        }\r\n\r\n        binding.nicknameTextview.setOnClickListener {\r\n            if (editMode) {\r\n                dialog.myDig()\r\n                dialog.setOnClickListener(object : CustomDialog.ButtonClickListener {\r\n                    override fun onClicked(myName: String) {\r\n                        if(myName != \"\") {\r\n                            binding.nicknameTextview.text = myName\r\n                            db.collection(\"users\").document(\"$friendUid\")\r\n                                .update(mapOf(\"name\" to myName))\r\n                        }\r\n                    }\r\n                })\r\n            }\r\n        }\r\n\r\n        binding.IntroduceTextview.setOnClickListener {\r\n            if (editMode) {\r\n                dialog.myDig()\r\n                dialog.setOnClickListener(object : CustomDialog.ButtonClickListener {\r\n                    override fun onClicked(myName: String) {\r\n                        if (myName != \"\") {\r\n                            binding.IntroduceTextview.text = myName\r\n                            db.collection(\"users\").document(\"$friendUid\")\r\n                                .update(mapOf(\"introduce\" to myName))\r\n                        }\r\n                    }\r\n                })\r\n            }\r\n        }\r\n    }\r\n\r\n    private fun loadPosts() {\r\n        Firebase.firestore.collection(\"users\").document(\"$friendUid\")\r\n            .addSnapshotListener { documentSnapshot, _ ->\r\n                if (documentSnapshot == null) return@addSnapshotListener\r\n                if (documentSnapshot.data != null) {\r\n                    val postImages: List<String>? = documentSnapshot.toObject<List<String>>()\r\n                }\r\n            }\r\n    }\r\n\r\n    private var launcher: ActivityResultLauncher<Intent> =\r\n        registerForActivityResult(\r\n            ActivityResultContracts.StartActivityForResult()\r\n        ) { result ->\r\n            if (result.resultCode == RESULT_OK) {\r\n                Log.e(TAG, \"result : $result\")\r\n                val intent: Intent? = result.data\r\n                Log.e(TAG, \"intent : $intent\")\r\n                val uri = intent?.data\r\n                Log.e(TAG, \"uri : $uri\")\r\n                findViewById<ImageView>(R.id.profilePic).setImageURI(uri)\r\n                if (uri != null) {\r\n                    uploadToStorage(uri, \"$friendUid\")\r\n                }\r\n            }\r\n        }\r\n    private fun uploadToStorage(uri: Uri, postKey: String) {\r\n        val fileName = System.currentTimeMillis()\r\n        val ref = Firebase.storage.reference.child(\"post_image/$fileName.jpg\")\r\n        ref.putFile(uri).continueWithTask { task ->\r\n            if (!task.isSuccessful) {\r\n                task.exception?.let {\r\n                    throw it\r\n                }\r\n            }\r\n            ref.downloadUrl\r\n        }.addOnCompleteListener { task ->\r\n            if (task.isSuccessful) {\r\n                val downloadUri = task.result\r\n                // 첫 번째 downloadUri가 Complete 됐을 때 database의 image를 업데이트 해준다.\r\n                val db = Firebase.firestore\r\n                db.collection(\"users\").document(\"$postKey\").update(mapOf(\"profile_image\" to downloadUri))\r\n            }\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/project/cogjs/FriendProfile.kt b/app/src/main/java/com/example/project/cogjs/FriendProfile.kt
+--- a/app/src/main/java/com/example/project/cogjs/FriendProfile.kt	(revision d09ae043ed2a7c2cbdb2287b7c74a5da73d33f08)
++++ b/app/src/main/java/com/example/project/cogjs/FriendProfile.kt	(date 1669434320316)
+@@ -10,12 +10,16 @@
+ import androidx.activity.result.ActivityResultLauncher
+ import androidx.activity.result.contract.ActivityResultContracts
+ import androidx.appcompat.app.AppCompatActivity
++import androidx.core.content.ContentProviderCompat.requireContext
+ import com.bumptech.glide.Glide
+ import com.bumptech.glide.request.RequestOptions
+ import com.example.project.CustomDialog
+ import com.example.project.MS.PostData
++import com.example.project.MS.db
++import com.example.project.MS.user
+ import com.example.project.R
+ import com.example.project.databinding.ActivityFriendProfileBinding
++import com.example.project.databinding.FragmentProfile2Binding
+ import com.google.firebase.auth.ktx.auth
+ import com.google.firebase.firestore.ktx.firestore
+ import com.google.firebase.firestore.ktx.toObject
+@@ -23,6 +27,8 @@
+ import com.google.firebase.storage.ktx.storage
+ 
+ class FriendProfile: AppCompatActivity() {
++    val data = mutableListOf<PostData>()
++    private lateinit var binding: FragmentProfile2Binding
+     private lateinit var postImages: List<String>
+     var friendUid : String = ""
+     override fun onCreate(savedInstanceState: Bundle?) {
+@@ -32,6 +38,7 @@
+ 
+         friendUid = intent.getStringExtra("friendUid").toString()
+ 
++
+         var editMode = false
+         val dialog = CustomDialog(this)
+         val db = Firebase.firestore
+@@ -114,6 +121,131 @@
+             }
+     }
+ 
++    private fun initRecycler() {
++        //binding.recyclerView.layoutManager = LinearLayoutManager(context)
++        //binding.recyclerView.adapter = RecyclerItemAdapter(context)
++        //recyclerItemAdapter = RecyclerItemAdapter()
++        data.apply {
++            db.collection("posts")
++                .whereEqualTo("writer_uid", user)
++                .get()
++                .addOnSuccessListener { documents ->
++                    for (document in documents) {
++                        Log.d(TAG, "${document.id} => ${document.data}")
++                        add(PostData(postImg = document.id))
++                        //binding.textView.text = data.size.toString()
++
++                        for (i in 0 until data.size) {
++                            if (i == 0) {
++                                Firebase.firestore.collection("posts").document(data[i].postImg)
++                                    .addSnapshotListener { documentSnapshot, _ ->
++                                        if (documentSnapshot == null) return@addSnapshotListener
++                                        if (documentSnapshot.data != null) {
++                                            val url = documentSnapshot.data!!["post_image"]
++                                            Glide.with(binding.root).load(url).apply(RequestOptions()).into(binding.imageView2)
++                                        }
++                                    }
++                            }
++
++                            if (i == 1) {
++                                Firebase.firestore.collection("posts").document(data[i].postImg)
++                                    .addSnapshotListener { documentSnapshot, _ ->
++                                        if (documentSnapshot == null) return@addSnapshotListener
++                                        if (documentSnapshot.data != null) {
++                                            val url = documentSnapshot.data!!["post_image"]
++                                            Glide.with(binding.root).load(url).apply(RequestOptions()).into(binding.imageView3)
++                                        }
++                                    }
++                            }
++
++                            if (i == 2) {
++                                Firebase.firestore.collection("posts").document(data[i].postImg)
++                                    .addSnapshotListener { documentSnapshot, _ ->
++                                        if (documentSnapshot == null) return@addSnapshotListener
++                                        if (documentSnapshot.data != null) {
++                                            val url = documentSnapshot.data!!["post_image"]
++                                            Glide.with(binding.root).load(url).apply(RequestOptions()).into(binding.imageView4)
++                                        }
++                                    }
++                            }
++
++                            if (i == 3) {
++                                Firebase.firestore.collection("posts").document(data[i].postImg)
++                                    .addSnapshotListener { documentSnapshot, _ ->
++                                        if (documentSnapshot == null) return@addSnapshotListener
++                                        if (documentSnapshot.data != null) {
++                                            val url = documentSnapshot.data!!["post_image"]
++                                            Glide.with(binding.root).load(url).apply(RequestOptions()).into(binding.imageView5)
++                                        }
++                                    }
++                            }
++
++                            if (i == 4) {
++                                Firebase.firestore.collection("posts").document(data[i].postImg)
++                                    .addSnapshotListener { documentSnapshot, _ ->
++                                        if (documentSnapshot == null) return@addSnapshotListener
++                                        if (documentSnapshot.data != null) {
++                                            val url = documentSnapshot.data!!["post_image"]
++                                            Glide.with(binding.root).load(url).apply(RequestOptions()).into(binding.imageView6)
++                                        }
++                                    }
++                            }
++
++                            if (i == 5) {
++                                Firebase.firestore.collection("posts").document(data[i].postImg)
++                                    .addSnapshotListener { documentSnapshot, _ ->
++                                        if (documentSnapshot == null) return@addSnapshotListener
++                                        if (documentSnapshot.data != null) {
++                                            val url = documentSnapshot.data!!["post_image"]
++                                            Glide.with(binding.root).load(url).apply(RequestOptions()).into(binding.imageView7)
++                                        }
++                                    }
++                            }
++
++                            if (i == 6) {
++                                Firebase.firestore.collection("posts").document(data[i].postImg)
++                                    .addSnapshotListener { documentSnapshot, _ ->
++                                        if (documentSnapshot == null) return@addSnapshotListener
++                                        if (documentSnapshot.data != null) {
++                                            val url = documentSnapshot.data!!["post_image"]
++                                            Glide.with(binding.root).load(url).apply(RequestOptions()).into(binding.imageView8)
++                                        }
++                                    }
++                            }
++
++                            if (i == 7) {
++                                Firebase.firestore.collection("posts").document(data[i].postImg)
++                                    .addSnapshotListener { documentSnapshot, _ ->
++                                        if (documentSnapshot == null) return@addSnapshotListener
++                                        if (documentSnapshot.data != null) {
++                                            val url = documentSnapshot.data!!["post_image"]
++                                            Glide.with(binding.root).load(url).apply(RequestOptions()).into(binding.imageView9)
++                                        }
++                                    }
++                            }
++
++                            if (i == 8) {
++                                Firebase.firestore.collection("posts").document(data[i].postImg)
++                                    .addSnapshotListener { documentSnapshot, _ ->
++                                        if (documentSnapshot == null) return@addSnapshotListener
++                                        if (documentSnapshot.data != null) {
++                                            val url = documentSnapshot.data!!["post_image"]
++                                            Glide.with(binding.root).load(url).apply(RequestOptions()).into(binding.imageView10)
++                                        }
++                                    }
++                            }
++                        }
++                    }
++                }
++                .addOnFailureListener { exception ->
++                    Log.w(TAG, "Error getting documents: ", exception)
++                }
++            //recyclerItemAdapter.datas = data
++            //recyclerItemAdapter.notifyDataSetChanged()
++            //binding.recyclerView.adapter = recyclerItemAdapter
++        }
++    }
++
+     private var launcher: ActivityResultLauncher<Intent> =
+         registerForActivityResult(
+             ActivityResultContracts.StartActivityForResult()
+Index: app/src/main/java/com/example/project/cogjs/FriendsList.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.project.cogjs\r\n\r\nimport android.annotation.SuppressLint\r\nimport android.content.Intent\r\nimport android.os.Bundle\r\nimport android.text.TextUtils.replace\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport android.widget.Button\r\nimport android.widget.ImageView\r\nimport android.widget.TextView\r\nimport androidx.fragment.app.Fragment\r\nimport androidx.recyclerview.widget.RecyclerView\r\nimport com.bumptech.glide.Glide\r\nimport com.example.project.cogjs.FriendProfile\r\nimport com.example.project.MainActivity\r\nimport com.example.project.R\r\nimport com.example.project.databinding.FriendslistBinding\r\nimport com.google.firebase.firestore.FieldValue\r\nimport com.google.firebase.firestore.ktx.firestore\r\nimport com.google.firebase.ktx.Firebase\r\nimport com.google.firebase.storage.ktx.storage\r\n\r\nclass FriendsList: Fragment() {\r\n    val db = Firebase.firestore\r\n    val storage = Firebase.storage\r\n    private var fragmentFriendProfile = FriendProfile()\r\n    lateinit var profile:ImageView\r\n    lateinit var  mainActivity: MainActivity\r\n    lateinit var binding: FriendslistBinding\r\n    lateinit var deleteUid1: String\r\n    lateinit var deleteUid2: String\r\n\r\n    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {\r\n        binding = FriendslistBinding.inflate(layoutInflater, container, false)\r\n\r\n        return binding.root\r\n    }\r\n\r\n    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {\r\n        super.onViewCreated(view, savedInstanceState)\r\n        val recyclerView = binding.recyclerview\r\n        recyclerView.adapter = RecyclerViewAdapter()\r\n\r\n    }\r\n\r\n    inner class RecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {\r\n        val userUid = \"rQHofGPQx3OYR8T4rjI9W9wPCla2\"\r\n\r\n        // Person 클래스 ArrayList 생성성\r\n        var friendsList: ArrayList<FriendUser> = arrayListOf()\r\n        var tempFriendsList: ArrayList<String>? = arrayListOf()\r\n        var forDeleteList: HashMap<String, Any>? = HashMap()\r\n\r\n        init {\r\n            db?.collection(\"users\")\r\n                .addSnapshotListener { querySnapshot, firebaseFirestoreException ->\r\n                    // ArrayList 비워줌\r\n                    friendsList.clear()\r\n                    tempFriendsList?.clear()\r\n                    forDeleteList?.clear()\r\n\r\n                    for (snapshot in querySnapshot!!.documents) {\r\n                        if (snapshot.id == userUid) {\r\n                            tempFriendsList = snapshot[\"friends\"] as ArrayList<String>\r\n                        }\r\n                        notifyDataSetChanged()\r\n                    }\r\n\r\n                    for (snapshot in querySnapshot!!.documents) {\r\n                        for (i in tempFriendsList!!) {\r\n                            if (snapshot.id == i) {\r\n                                var item = snapshot.toObject(FriendUser::class.java)\r\n                                friendsList.add(item!!)\r\n                                forDeleteList?.put(i, item)\r\n                            }\r\n                            notifyDataSetChanged()\r\n                        }\r\n                    }\r\n                }\r\n        }\r\n\r\n        // xml파일을 inflate하여 ViewHolder를 생성\r\n        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {\r\n            var view = LayoutInflater.from(parent.context)\r\n                .inflate(R.layout.friendslist_item, parent, false)\r\n\r\n            /*profile = view.findViewById(R.id.friend_profile)\r\n            profile.setOnClickListener(object: View.OnClickListener{\r\n                override fun onClick(p0: View?) {\r\n                    val intent = Intent(context, FriendProfile::class.java)\r\n                    intent.putExtra(\"friendUid\", deleteUid2)\r\n                    startActivity(intent)\r\n                }\r\n            })*/\r\n\r\n            return ViewHolder(view)\r\n        }\r\n\r\n        inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {\r\n        }\r\n\r\n        // onCreateViewHolder에서 만든 view와 실제 데이터를 연결\r\n        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, @SuppressLint(\"RecyclerView\") position: Int) {\r\n            var viewHolder = (holder as ViewHolder).itemView\r\n\r\n            var name = viewHolder.findViewById<TextView>(R.id.name)\r\n            name.text = friendsList[position].name\r\n\r\n            var profile = viewHolder.findViewById<ImageView>(R.id.friend_profile)\r\n            Glide.with(holder.itemView.context).load(friendsList[position].profileImage)\r\n                .into(profile)\r\n\r\n            var delete = viewHolder.findViewById<Button>(R.id.delete)\r\n            delete.setOnClickListener {\r\n            //Toast.makeText(context, \"${deleteUid2}\", Toast.LENGTH_SHORT).show()\r\n                deleteUid1 = forDeleteList?.filterValues { it == friendsList[position]}?.keys.toString()\r\n                deleteUid2 = deleteUid1.replace(\"[\",\"\").replace(\"]\",\"\")\r\n                db.collection(\"users\").document(userUid)\r\n                    .update(\"friends\", FieldValue.arrayRemove(\"$deleteUid2\"))\r\n            }\r\n\r\n           profile.setOnClickListener(object: View.OnClickListener{\r\n                override fun onClick(p0: View?) {\r\n                    deleteUid1 = forDeleteList?.filterValues { it == friendsList[position]}?.keys.toString()\r\n                    deleteUid2 = deleteUid1.replace(\"[\",\"\").replace(\"]\",\"\")\r\n                    val intent = Intent(context, FriendProfile::class.java)\r\n                    intent.putExtra(\"friendUid\", deleteUid2)\r\n                    startActivity(intent)\r\n                }\r\n            })\r\n        }\r\n\r\n            // 리사이클러뷰의 아이템 총 개수 반환\r\n            override fun getItemCount(): Int {\r\n                return friendsList.size\r\n            }\r\n\r\n        }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/project/cogjs/FriendsList.kt b/app/src/main/java/com/example/project/cogjs/FriendsList.kt
+--- a/app/src/main/java/com/example/project/cogjs/FriendsList.kt	(revision d09ae043ed2a7c2cbdb2287b7c74a5da73d33f08)
++++ b/app/src/main/java/com/example/project/cogjs/FriendsList.kt	(date 1669434862294)
+@@ -17,6 +17,7 @@
+ import com.example.project.MainActivity
+ import com.example.project.R
+ import com.example.project.databinding.FriendslistBinding
++import com.google.firebase.auth.ktx.auth
+ import com.google.firebase.firestore.FieldValue
+ import com.google.firebase.firestore.ktx.firestore
+ import com.google.firebase.ktx.Firebase
+@@ -46,7 +47,7 @@
+     }
+ 
+     inner class RecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+-        val userUid = "rQHofGPQx3OYR8T4rjI9W9wPCla2"
++        val userUid = Firebase.auth.currentUser?.uid
+ 
+         // Person 클래스 ArrayList 생성성
+         var friendsList: ArrayList<FriendUser> = arrayListOf()
+@@ -117,8 +118,10 @@
+             //Toast.makeText(context, "${deleteUid2}", Toast.LENGTH_SHORT).show()
+                 deleteUid1 = forDeleteList?.filterValues { it == friendsList[position]}?.keys.toString()
+                 deleteUid2 = deleteUid1.replace("[","").replace("]","")
+-                db.collection("users").document(userUid)
+-                    .update("friends", FieldValue.arrayRemove("$deleteUid2"))
++                if (userUid != null) {
++                    db.collection("users").document(userUid)
++                        .update("friends", FieldValue.arrayRemove("$deleteUid2"))
++                }
+             }
+ 
+            profile.setOnClickListener(object: View.OnClickListener{
+Index: app/src/main/res/menu/navi_menu.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<menu xmlns:android=\"http://schemas.android.com/apk/res/android\">\r\n\r\n    <item\r\n        android:id=\"@+id/timeLine\"\r\n        android:icon=\"@drawable/home\"\r\n        android:title=\"타임라인\"/>\r\n\r\n    <item\r\n        android:id=\"@+id/Search\"\r\n        android:icon=\"@drawable/search\"\r\n        android:title=\"검색\"/>\r\n    <item\r\n        android:id=\"@+id/Profile\"\r\n        android:icon=\"@drawable/user\"\r\n        android:title=\"프로필\"\r\n        />\r\n    <item\r\n        android:id=\"@+id/Friend\"\r\n        android:icon=\"@drawable/list\"\r\n        android:title=\"친구 목록\"\r\n        />\r\n    <item\r\n        android:id=\"@+id/AddPost\"\r\n        android:icon=\"@drawable/plus\"\r\n        android:title=\"포스트 추가\"\r\n        />\r\n</menu>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/menu/navi_menu.xml b/app/src/main/res/menu/navi_menu.xml
+--- a/app/src/main/res/menu/navi_menu.xml	(revision d09ae043ed2a7c2cbdb2287b7c74a5da73d33f08)
++++ b/app/src/main/res/menu/navi_menu.xml	(date 1669431861559)
+@@ -22,7 +22,6 @@
+         />
+     <item
+         android:id="@+id/AddPost"
+-        android:icon="@drawable/plus"
+         android:title="포스트 추가"
+         />
+ </menu>
+Index: app/src/main/res/layout/activity_main.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\">\r\n\r\n\r\n    <FrameLayout\r\n        android:id=\"@+id/mainFrameLayout\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\">\r\n\r\n\r\n    <com.google.android.material.bottomnavigation.BottomNavigationView\r\n        android:id=\"@+id/navigationView\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"60dp\"\r\n        android:layout_gravity=\"start\"\r\n        android:background=\"@color/white\"\r\n        app:itemIconTint=\"@drawable/icon_selector_color\"\r\n        app:itemTextColor=\"@drawable/icon_selector_color\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:menu=\"@menu/navi_menu\">\r\n\r\n    </com.google.android.material.bottomnavigation.BottomNavigationView>\r\n\r\n\r\n</androidx.constraintlayout.widget.ConstraintLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_main.xml b/app/src/main/res/layout/activity_main.xml
+--- a/app/src/main/res/layout/activity_main.xml	(revision d09ae043ed2a7c2cbdb2287b7c74a5da73d33f08)
++++ b/app/src/main/res/layout/activity_main.xml	(date 1669432716122)
+@@ -12,7 +12,7 @@
+         android:layout_height="match_parent"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent">
++        app:layout_constraintTop_toTopOf="parent"/>
+ 
+ 
+     <com.google.android.material.bottomnavigation.BottomNavigationView

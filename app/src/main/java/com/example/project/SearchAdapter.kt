@@ -58,7 +58,7 @@ class SearchAdapter(private var items: List<MyItem>, var context: Context)
             FirebaseFirestore.getInstance().collection("users").document(uid!!)
                 .update("friends", FieldValue.arrayUnion(item.id))
                 .addOnSuccessListener {
-                    Toast.makeText(context, "친구 추가 성공.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "친구 추가 성공", Toast.LENGTH_SHORT).show()
                     println("친구 추가 성공 + ${item.name}")
                 }.addOnFailureListener { println("친구 추가 실패 + name : ${item.name}") }
 

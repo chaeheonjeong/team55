@@ -44,7 +44,7 @@
         android:layout_marginStart="23dp"
         android:layout_marginTop="20dp"
         android:text="아이디"
-        android:textColor="@color/gray"
+        android:textColor="@color/main2"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@id/layout_search"
@@ -57,7 +57,7 @@
         android:layout_marginStart="170dp"
         android:layout_marginTop="20dp"
         android:text="이메일"
-        android:textColor="@color/gray"
+        android:textColor="@color/main2"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/showID"
@@ -70,7 +70,7 @@
         android:layout_marginHorizontal="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:background="#aaa"
+        android:background="@color/main2"
         app:layout_constraintStart_toStartOf="@id/layout_search"
         app:layout_constraintTop_toBottomOf="@id/showID" />
 

@@ -6,19 +6,19 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
-import com.example.project.databinding.ActivityLoginBinding
+import com.example.project.databinding.ActivitySigninBinding
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityLoginBinding.inflate(layoutInflater)
+        val binding = ActivitySigninBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.login.setOnClickListener {
-            val userEmail = binding.username.text.toString()
-            val password = binding.password.text.toString()
+        binding.signIn.setOnClickListener {
+            val userEmail = binding.etEmail.text.toString()
+            val password = binding.etPassword.text.toString()
 
             if(TextUtils.isEmpty(userEmail) || TextUtils.isEmpty(password)) {
                 Toast.makeText(this, "아이디와 비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show()
@@ -27,7 +27,7 @@ class LoginActivity : AppCompatActivity() {
                 doLogin(userEmail, password)
             }
         }
-        binding.signup.setOnClickListener {
+        binding.signUp.setOnClickListener {
             startActivity(
                 Intent(this, SignUpActivity::class.java)
             )

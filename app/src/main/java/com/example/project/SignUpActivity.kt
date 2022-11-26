@@ -9,6 +9,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.project.cogjs.FriendUser
 import com.example.project.databinding.ActivitySignupBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -20,6 +21,7 @@ import com.google.firebase.ktx.Firebase
 import java.time.Year
 import java.util.*
 import java.util.regex.Pattern
+import kotlin.collections.ArrayList
 
 
 class SignUpActivity : AppCompatActivity() {
@@ -32,6 +34,7 @@ class SignUpActivity : AppCompatActivity() {
     private var Usermonth:Int = 0
     private var Userday:Int = 0
     private lateinit var cal:Calendar
+    private val friends: ArrayList<String> = arrayListOf()
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,6 +93,7 @@ class SignUpActivity : AppCompatActivity() {
                         "year" to Useryear,
                         "month" to Usermonth+1,
                         "day" to Userday,
+                        "friends" to friends,
                         "introduce" to "자기 소개",
                         "profile_image" to "https://firebasestorage.googleapis.com/v0/b/team55-65c21.appspot.com/o/upload_images%2Fpro2.bmp?alt=media&token=eb9c3b4f-0e34-4af8-bac8-2cbafc1160b4"
                     )

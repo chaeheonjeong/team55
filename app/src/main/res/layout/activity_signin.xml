@@ -52,14 +52,40 @@
             android:background="@drawable/sign_in_et_email"
             android:hint="이메일 주소"
             android:padding="10dp"
+            android:inputType="textEmailAddress"
+            android:textColorHint="@color/black"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_password"
+            android:inputType="textPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/sign_in_et_email"
+            android:hint="비밀번호"
+            android:padding="10dp"
             android:textColorHint="@color/black"
             android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:layout_width="match_parent"
+            android:id="@+id/sign_in"
             android:layout_height="wrap_content"
-            android:background="@drawable/sign_in_button_continue"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/sign_up_button"
             android:text="계속하기"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:id="@+id/sign_up"
+            android:layout_height="wrap_content"
+            android:background="@drawable/sign_up_button"
+            android:text="회원가입"
+            android:textStyle="bold"
             android:textColor="@color/white"
             android:textSize="18sp" />
 

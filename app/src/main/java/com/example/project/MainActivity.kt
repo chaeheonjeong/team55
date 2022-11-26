@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //setFragment(TAG_HOME,TimelineFragment())
+        setFragment(TAG_HOME,TimelineFragment())
 
         if (Firebase.auth.currentUser == null) {
             startActivity(
@@ -56,11 +57,11 @@ class MainActivity : AppCompatActivity() {
                     transaction.replace(R.id.mainFrameLayout,fragmentB, TAG_SEARCH)
                 }
                 R.id.Profile -> {
-                    val fragmentC = FriendsList()
+                    val fragmentC = ProfileFragment()
                     transaction.replace(R.id.mainFrameLayout,fragmentC, TAG_PROFILE)
                 }
                 R.id.Friend -> {
-                    val fragmentD = ProfileFragment()
+                    val fragmentD = FriendsList()
                     transaction.replace(R.id.mainFrameLayout,fragmentD, TAG_FRIEND)
                 }
                 R.id.AddPost -> {
@@ -110,7 +111,12 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         val bnv = findViewById<View>(R.id.navigationView) as BottomNavigationView
-        updateBottomMenu(bnv)
+        if(bnv.menu.findItem(R.id.timeLine).isChecked) {
+            ActivityCompat.finishAffinity(this)
+        }
+        else {
+            updateBottomMenu(bnv)
+        }
 
     }
     private fun setFragment(tag: String, fragment: Fragment) {

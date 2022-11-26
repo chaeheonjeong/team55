@@ -1,8 +1,10 @@
 package com.example.project
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.project.databinding.ItemBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -23,7 +25,7 @@ data class MyItem(val id: String, val name: String,val email:String) {
 
 class SearchViewHolder(val binding: ItemBinding) : RecyclerView.ViewHolder(binding.root)
 
-class SearchAdapter(private var items: List<MyItem>)
+class SearchAdapter(private var items: List<MyItem>, var fragment: SearchFragment)
     : RecyclerView.Adapter<SearchViewHolder>() {
 
     private val db: FirebaseFirestore = Firebase.firestore
@@ -45,7 +47,7 @@ class SearchAdapter(private var items: List<MyItem>)
         return SearchViewHolder(binding)
     }
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
-        val itemsCollectionRef = db.collection("test")
+        val itemsCollectionRef = db.collection("users")
         val item = items[position]
 
         holder.binding.textUserName.text = item.name
@@ -56,6 +58,7 @@ class SearchAdapter(private var items: List<MyItem>)
             FirebaseFirestore.getInstance().collection("users").document(uid!!)
                 .update("friends", FieldValue.arrayUnion(item.id))
                 .addOnSuccessListener {
+                    Toast.makeText(fragment.activity, "친구 추가 성공.", Toast.LENGTH_SHORT).show()
                     println("친구 추가 성공 + ${item.name}")
                 }.addOnFailureListener { println("친구 추가 실패 + name : ${item.name}") }
 

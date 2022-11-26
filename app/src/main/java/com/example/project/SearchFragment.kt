@@ -23,7 +23,7 @@ class SearchFragment : Fragment() {
     private var firestore : FirebaseFirestore? = null
     private val db: FirebaseFirestore = Firebase.firestore
     private val itemsCollectionRef = db.collection("users")
-    private var adapter: SearchAdapter? = null
+    private lateinit var adapter: SearchAdapter
     private var auth: FirebaseAuth = Firebase.auth
     private var isSame:Boolean = false
 
@@ -38,9 +38,8 @@ class SearchFragment : Fragment() {
     ): View? {
         val binding = FragmentSearchBinding.inflate(inflater, container, false)
         val recyclerview = binding.FragrecyclerView
-
+        adapter = SearchAdapter(emptyList(), requireContext())
         recyclerview.layoutManager = LinearLayoutManager(requireContext())
-        adapter = SearchAdapter(emptyList())
         recyclerview.adapter = adapter
         firestore = FirebaseFirestore.getInstance()
 

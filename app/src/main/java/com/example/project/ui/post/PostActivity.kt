@@ -1,20 +1,20 @@
 package com.example.project.ui.post
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.project.databinding.ActivityPostBinding
 import com.example.project.model.Comment
 import com.example.project.model.Post
 import com.example.project.model.User
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -23,7 +23,7 @@ class PostActivity : AppCompatActivity() {
     private lateinit var viewModel: PostViewModel
 
     // private val uid = Firebase.auth.currentUser?.uid // todo 나중에 exception 처리 해주기
-    private val user = Firebase.auth.currentUser
+    private val currentUser = Firebase.auth.currentUser
     private var db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,12 +32,33 @@ class PostActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val postKey = intent.getStringExtra("postKey")!!
-        viewModel = PostViewModel(postKey, user!!.uid)
+        viewModel = PostViewModel(postKey, currentUser!!.uid)
         val commentAdapter = CommentAdapter(this)
         binding.rvComments.adapter = commentAdapter
 
-        binding(commentAdapter)
+        bind(commentAdapter)
         setWriteComment(postKey)
+
+        setFollowingButton(currentUser)
+        setBackButton()
+    }
+
+    private fun setBackButton() {
+        binding.buttonBack.setOnClickListener {
+            this.finish()
+        }
+    }
+
+    private fun setFollowingButton(currentUser: FirebaseUser) {
+        binding.buttonWriterFollow.setOnClickListener {
+            FirebaseFirestore.getInstance().collection("users").document(currentUser.uid)
+                .update("friends", FieldValue.arrayUnion(viewModel.writer.value?.uid))
+                .addOnSuccessListener {
+                    Toast.makeText(this, "팔로잉 하셨습니다.", Toast.LENGTH_SHORT).show()
+                }.addOnFailureListener {
+                    Toast.makeText(this, "팔로잉 실패", Toast.LENGTH_SHORT).show()
+                }
+        }
     }
 
     private fun setWriteComment(postKey: String) {
@@ -64,7 +85,7 @@ class PostActivity : AppCompatActivity() {
         }
     }
 
-    private fun binding(commentAdapter: CommentAdapter) {
+    private fun bind(commentAdapter: CommentAdapter) {
         viewModel.post.observe(this) { post ->
             bindPost(post)
         }
@@ -75,10 +96,8 @@ class PostActivity : AppCompatActivity() {
             bindWriter(writer)
         }
         viewModel.comments.observe(this) { comments ->
-            Log.d("comments", "아니아니 작동해야된다구")
             commentAdapter.submitList(comments)
         }
-
     }
 
     private fun bindPost(post: Post) {
@@ -91,7 +110,7 @@ class PostActivity : AppCompatActivity() {
     private fun bindWriter(writer: User) {
         setImage(writer.profileImage, binding.ivWriterImage)
         binding.tvWriterName.text = writer.name
-        binding.tvWriterFollower.text = "친구 수 ${writer.friends?.size}"
+        binding.tvWriterFollower.text = "following ${writer.friends?.size}"
     }
 
     private fun setImage(url: String, view: ImageView) {
@@ -100,3 +119,4 @@ class PostActivity : AppCompatActivity() {
             .into(view)
     }
 }
+

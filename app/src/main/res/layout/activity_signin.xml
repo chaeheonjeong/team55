@@ -52,11 +52,13 @@
             android:background="@drawable/sign_in_et_email"
             android:hint="이메일 주소"
             android:padding="10dp"
+            android:inputType="textEmailAddress"
             android:textColorHint="@color/black"
             android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/et_password"
+            android:inputType="textPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"

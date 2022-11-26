@@ -45,7 +45,7 @@ class SearchAdapter(private var items: List<MyItem>)
         return SearchViewHolder(binding)
     }
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
-        val itemsCollectionRef = db.collection("test")
+        val itemsCollectionRef = db.collection("users")
         val item = items[position]
 
         holder.binding.textUserName.text = item.name
@@ -53,7 +53,7 @@ class SearchAdapter(private var items: List<MyItem>)
         val uid = auth.currentUser?.uid
 
         holder.binding.AddBtn.setOnClickListener {
-            FirebaseFirestore.getInstance().collection("test").document(uid!!)
+            FirebaseFirestore.getInstance().collection("users").document(uid!!)
                 .update("friends", FieldValue.arrayUnion(item.id))
                 .addOnSuccessListener {
                     println("친구 추가 성공 + ${item.name}")

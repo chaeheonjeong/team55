@@ -3,32 +3,39 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_logo_title"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
+            android:id="@+id/iv_logo_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:src="@mipmap/ic_launcher_bugi"
+            android:layout_marginStart="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/button_plus"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="end"
-            android:background="@color/transparent"
-            android:scaleType="fitCenter"
-            android:src="@mipmap/ic_launcher_bugi"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_logo_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Team55"
+            android:textColor="@color/main3"
+            android:fontFamily="fon"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:paddingStart="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_logo_image" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

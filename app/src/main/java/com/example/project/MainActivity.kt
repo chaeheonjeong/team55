@@ -56,11 +56,11 @@ class MainActivity : AppCompatActivity() {
                     transaction.replace(R.id.mainFrameLayout,fragmentB, TAG_SEARCH)
                 }
                 R.id.Profile -> {
-                    val fragmentC = FriendsList()
+                    val fragmentC = ProfileFragment()
                     transaction.replace(R.id.mainFrameLayout,fragmentC, TAG_PROFILE)
                 }
                 R.id.Friend -> {
-                    val fragmentD = ProfileFragment()
+                    val fragmentD = FriendsList()
                     transaction.replace(R.id.mainFrameLayout,fragmentD, TAG_FRIEND)
                 }
                 R.id.AddPost -> {

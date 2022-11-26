@@ -103,7 +103,7 @@ class AddingPostFragment : Fragment() {
                     userRef.update("posts", FieldValue.arrayUnion(document.id)) // user에도 추가
                     uploadToStorage(imageUri!!, document.id)
                     // 뒤로가기 다시 구현(규민님거 보고)
-                    // requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
+                    requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
                 }
         }
     }

@@ -4,6 +4,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.PropertyName
 
 data class User(
+    val uid: String = "",
     val name: String = "",
     val email: String = "",
     val intro: String? = "",

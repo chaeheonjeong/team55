@@ -33,7 +33,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_adding_main"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -47,34 +47,57 @@
             android:layout_width="250dp"
             android:layout_height="250dp"
             android:layout_margin="10dp"
-            android:src="@color/light_gray" />
+            android:src="@color/light_gray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_title"
             style="@style/Size14.Black.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="제목" />
+            android:text="제목"
+            app:layout_constraintStart_toStartOf="@id/iv_adding_image"
+            app:layout_constraintTop_toBottomOf="@id/iv_adding_image" />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/et_adding_title"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:hint="title" />
+            android:hint="title"
+            app:layout_constraintStart_toStartOf="@id/tv_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_content"
             style="@style/Size14.Black.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="설명" />
+            android:text="설명"
+            app:layout_constraintStart_toStartOf="@id/et_adding_title"
+            app:layout_constraintTop_toBottomOf="@id/et_adding_title" />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/et_adding_content"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:hint="content" />
+            android:hint="content"
+            app:layout_constraintStart_toStartOf="@id/tv_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_content" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

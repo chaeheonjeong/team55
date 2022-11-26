@@ -10,6 +10,8 @@ import com.example.project.model.Comment
 import com.example.project.model.Post
 import com.example.project.model.User
 import com.example.project.repositoty.post.PostRepository
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -30,10 +32,14 @@ class PostViewModel(postKey: String, val uid: String?): ViewModel() {
     private val _comments = MutableLiveData<List<Comment>>()
     var comments: LiveData<List<Comment>> = _comments
 
+    private val _writer = MutableLiveData<User>()
+    var writer: LiveData<User> = _writer
+
     init {
-        loadPost2()
+        loadPost()
         loadUser()
         loadComments()
+        //loadComment2()
     }
 
 //    private fun loadPost() {
@@ -41,33 +47,49 @@ class PostViewModel(postKey: String, val uid: String?): ViewModel() {
 //        Log.d("post", "viewModel ${post.value?.title}")
 //    }
 
-    private fun loadPost2() {
-        val documentData = repository.getPost2()
+    private fun loadPost() {
+        val documentData = repository.getPost()
         documentData.addOnSuccessListener { snapshot ->
             _post.value = snapshot.toObject<Post>()
+            loadWriter(_post.value?.writerUid!!)
         }
     }
 
-    private fun loadComments() {
-        val querySnapshot = repository.getComments()
-        querySnapshot.addOnSuccessListener {
-            val comments = mutableListOf<Comment>()
-            for(documentData in it.documents) {
-                documentData.toObject<Comment>()?.let { comment ->
-                    comments.add(comment) }
-            }
-
-            _comments.value = comments
-            Log.d("post", comments.toString())
+    private fun loadWriter(writerUid: String) {
+        val document = repository.getWriter(writerUid)
+        document.addOnSuccessListener { snapshot ->
+            _writer.value = snapshot.toObject<User>()
         }
     }
 
     private fun loadUser() {
         val document = repository.getUser(uid)
         document.addOnSuccessListener { snapshot ->
-            val test = snapshot.toObject<User>()
-            _user.value = test
-            Log.d("post", test.toString())
+            _user.value = snapshot.toObject<User>()
         }
+    }
+
+    private fun loadComments() {
+        val queryComments = repository.getComments()
+        updateComments(queryComments)
+    }
+
+    private fun updateComments(query: Query) {
+        query.addSnapshotListener { snapshot, _ ->
+            if(snapshot == null) return@addSnapshotListener
+
+            _comments.value = makesComments(snapshot)
+        }
+    }
+
+    private fun makesComments(snapshot: QuerySnapshot): List<Comment> {
+        val documents = snapshot.documents
+        val comments = mutableListOf<Comment>()
+        for(document in documents) {
+            val value = document.toObject<Comment>()
+            comments.add(value!!)
+        }
+
+        return comments
     }
 }

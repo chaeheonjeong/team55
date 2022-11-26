@@ -4,11 +4,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.project.model.Comment
 import com.example.project.model.Post
-import com.example.project.model.User
-import com.example.project.repositoty.TimelineRepository
-import com.example.project.repositoty.post.PostRepository
+import com.example.project.repositoty.timeline.TimelineRepository
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.toObject
 
 class TimelineViewModel: ViewModel() {
@@ -21,17 +20,30 @@ class TimelineViewModel: ViewModel() {
         loadPosts()
     }
 
-
     private fun loadPosts() {
         val queryPostKeys = repository.getPostKeys()
-        queryPostKeys.addOnSuccessListener { documents ->
-            val tempPosts = mutableListOf<Post>()
-            for(document in documents) {
-                val postValue = document.toObject<Post>()
-                tempPosts.add(postValue)
-            }
+        updatePosts(queryPostKeys)
+    }
 
-            _posts.value = tempPosts
+    // 데이터가 변화할 때마다 posts 새롭게 업데이트
+    private fun updatePosts(query: Query) {
+        query.addSnapshotListener { snapshot, e ->
+            if(snapshot == null)
+                return@addSnapshotListener
+
+            // 주어진 데이터(snapshot)으로 posts를 만들어 _posts를 업데이트 해준다.
+            _posts.value = makesPosts(snapshot)
         }
+    }
+
+    private fun makesPosts(snapshot: QuerySnapshot): List<Post> {
+        val documents = snapshot.documents
+        val posts = mutableListOf<Post>()
+        for(document in documents) {
+            val postValue = document.toObject<Post>()
+            posts.add(postValue!!)
+        }
+
+        return posts
     }
 }

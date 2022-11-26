@@ -27,17 +27,93 @@
                 android:background="@drawable/post_background_round"
                 android:orientation="vertical">
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/iv_post_image"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/iv_post_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:src="@mipmap/ic_launcher_bugi" />
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/button_back"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:alpha="0.5"
+                        android:layout_margin="14dp"
+                        android:background="@drawable/background_circle"
+                        android:padding="10dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/direction"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_writer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:src="@mipmap/ic_launcher_bugi" />
+                    android:layout_margin="18dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/iv_writer_image"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:scaleType="centerCrop"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:shapeAppearanceOverlay="@style/Circle"
+                        tools:src="@mipmap/ic_launcher_bugi" />
+
+                    <TextView
+                        android:id="@+id/tv_writer_name"
+                        style="@style/Size20.Black.Bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        app:layout_constraintStart_toEndOf="@id/iv_writer_image"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="작성자 이름" />
+
+                    <TextView
+                        android:id="@+id/tv_writer_follower"
+                        style="@style/Size14"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:maxLines="1"
+                        android:text="친구 수 4.4천 명"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/iv_writer_image"
+                        app:layout_constraintTop_toBottomOf="@id/tv_writer_name"
+                        tools:text="친구 수 4.4천 명" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/button_writer_follow"
+                        style="@style/Size16.White.Bold"
+                        android:layout_width="70dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/sign_in_button_continue"
+                        android:text="추가"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_post_title"
                     style="@style/Size24.Black.Bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginTop="18dp"
                     tools:text="post title" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -45,24 +121,27 @@
                     style="@style/Size20.Black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="18dp"
                     android:layout_marginBottom="10dp"
                     tools:text="post content" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_marginTop="10dp"
                 android:id="@+id/layout_comments"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/post_background_round"
                 android:orientation="vertical">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_comments"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="20dp"
                     android:nestedScrollingEnabled="false"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_comment" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -83,7 +162,6 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_user_image"
-            imageUrl="@{user.profileImage}"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:scaleType="centerCrop"

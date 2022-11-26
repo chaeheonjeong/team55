@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //setFragment(TAG_HOME,TimelineFragment())
+        setFragment(TAG_HOME,TimelineFragment())
 
         if (Firebase.auth.currentUser == null) {
             startActivity(

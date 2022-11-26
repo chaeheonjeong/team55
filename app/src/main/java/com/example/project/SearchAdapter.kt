@@ -48,14 +48,13 @@ class SearchAdapter(private var items: List<MyItem>)
         val itemsCollectionRef = db.collection("test")
         val item = items[position]
 
-
         holder.binding.textUserName.text = item.name
         holder.binding.textEmail.text = item.email
         val uid = auth.currentUser?.uid
 
         holder.binding.AddBtn.setOnClickListener {
             FirebaseFirestore.getInstance().collection("test").document(uid!!)
-                .update("friends", FieldValue.arrayUnion(item.name))
+                .update("friends", FieldValue.arrayUnion(item.id))
                 .addOnSuccessListener {
                     println("친구 추가 성공 + ${item.name}")
                 }.addOnFailureListener { println("친구 추가 실패 + name : ${item.name}") }

@@ -44,11 +44,11 @@ class ProfileFragment: Fragment() {
         var editMode = false
         val dialog = CustomDialog(requireContext())
         val db = Firebase.firestore
-        val itemsCollectionRef = db.collection("test")
+        val itemsCollectionRef = db.collection("users")
 
         fun getProfileImage() {
             if (user != null) {
-                Firebase.firestore.collection("test").document(user)
+                Firebase.firestore.collection("users").document(user)
                     .addSnapshotListener { documentSnapshot, _ ->
                         if (documentSnapshot == null) return@addSnapshotListener
                         if (documentSnapshot.data != null) {
@@ -105,7 +105,7 @@ class ProfileFragment: Fragment() {
                         if(myName != "") {
                             binding.nicknameTextview.text = myName
                             if (user != null) {
-                                db.collection("test").document(user)
+                                db.collection("users").document(user)
                                     .update(mapOf("name" to myName))
                             }
                         }
@@ -122,7 +122,7 @@ class ProfileFragment: Fragment() {
                         if (myName != "") {
                             binding.IntroduceTextview.text = myName
                             if (user != null) {
-                                db.collection("test").document(user)
+                                db.collection("users").document(user)
                                     .update(mapOf("introduce" to myName))
                             }
                         }
@@ -308,7 +308,7 @@ class ProfileFragment: Fragment() {
                 val downloadUri = task.result
                 // 첫 번째 downloadUri가 Complete 됐을 때 database의 image를 업데이트 해준다.
                 val db = Firebase.firestore
-                db.collection("test").document(postKey)
+                db.collection("users").document(postKey)
                     .update(mapOf("profile_image" to downloadUri))
             }
         }

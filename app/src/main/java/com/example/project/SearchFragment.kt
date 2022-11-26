@@ -25,6 +25,7 @@ class SearchFragment : Fragment() {
     private val itemsCollectionRef = db.collection("test")
     private var adapter: SearchAdapter? = null
     private var auth: FirebaseAuth = Firebase.auth
+    private var isSame:Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,28 +55,38 @@ class SearchFragment : Fragment() {
 
     private fun queryWhere(binding: FragmentSearchBinding) {
         val p = binding.searchWord.text.toString()
+        println(isSame)
         itemsCollectionRef.get().addOnSuccessListener {
             val uid = auth.currentUser?.uid
             for (doc in it) {
                 if(p == doc["name"].toString()) {
                     println("=====${doc["name"].toString()}====")
                     println("=====${p}=====")
+                    isSame = true
+                    println(isSame)
                 }
             }
         }
+        if(!isSame) {
+            Toast.makeText(this.activity, "정확하게 다시 검색해주세요(자기자신 검색X).", Toast.LENGTH_SHORT).show()
+        }
+        else {
+            println(isSame)
+            itemsCollectionRef.whereEqualTo("name", p).get()
+                .addOnSuccessListener {
+                    val items = arrayListOf<String>()
+                    val results = mutableListOf<MyItem>()
+                    for (doc in it) {
+                        items.add("${doc["name"]} - ${doc["email"]}")
+                        results.add(MyItem(doc))
+                    }
+                    adapter?.updateList(results)
+                    //binding.result.text = items.toString()
 
-        itemsCollectionRef.whereEqualTo("name", p).get()
-            .addOnSuccessListener {
-                val items = arrayListOf<String>()
-                val results = mutableListOf<MyItem>()
-                for (doc in it) {
-                    items.add("${doc["name"]} - ${doc["email"]}")
-                    results.add(MyItem(doc))
                 }
-                adapter?.updateList(results)
-                    }.addOnFailureListener {
+                .addOnFailureListener {
                 }
-
+        }
     }
     private fun updateList() {
         itemsCollectionRef.get().addOnSuccessListener {

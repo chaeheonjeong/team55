@@ -1,0 +1,257 @@
+Index: app/src/main/java/com/example/project/FriendUser.kt
+===================================================================
+diff --git a/app/src/main/java/com/example/project/FriendUser.kt b/app/src/main/java/com/example/project/FriendUser.kt
+deleted file mode 100644
+--- a/app/src/main/java/com/example/project/FriendUser.kt	(revision e07cbb971eac47bc1c6e191208fa4bafcb1f3dd1)
++++ /dev/null	(revision e07cbb971eac47bc1c6e191208fa4bafcb1f3dd1)
+@@ -1,3 +0,0 @@
+-package com.example.project
+-
+-data class FriendUser(var name : String? = null)
+\ No newline at end of file
+Index: app/src/main/java/com/example/project/FriendsList.kt
+===================================================================
+diff --git a/app/src/main/java/com/example/project/FriendsList.kt b/app/src/main/java/com/example/project/FriendsList.kt
+deleted file mode 100644
+--- a/app/src/main/java/com/example/project/FriendsList.kt	(revision e07cbb971eac47bc1c6e191208fa4bafcb1f3dd1)
++++ /dev/null	(revision e07cbb971eac47bc1c6e191208fa4bafcb1f3dd1)
+@@ -1,87 +0,0 @@
+-package com.example.project
+-
+-import android.app.Activity
+-import android.content.Context
+-import android.os.Bundle
+-import android.view.LayoutInflater
+-import android.view.View
+-import android.view.ViewGroup
+-import android.widget.ListView
+-import android.widget.TextView
+-import androidx.fragment.app.Fragment
+-import androidx.recyclerview.widget.LinearLayoutManager
+-import androidx.recyclerview.widget.RecyclerView
+-import com.google.firebase.firestore.ktx.firestore
+-import com.google.firebase.firestore.ktx.getField
+-import com.google.firebase.ktx.Firebase
+-
+-class FriendsList: Fragment() {
+-    val db = Firebase.firestore
+-
+-    override fun onAttach(context: Context) {
+-        super.onAttach(context)
+-    }
+-
+-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+-        val view = inflater.inflate(R.layout.friendslist, container, false)
+-
+-        var recyclerview = view.findViewById<RecyclerView>(R.id.recyclerview)
+-        recyclerview.adapter = RecyclerViewAdapter()
+-        recyclerview.layoutManager = LinearLayoutManager(context as Activity)
+-
+-        return view
+-    }
+-
+-    inner class RecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+-        val userUid = "x3kojX3jFWX9O5MJoStwXiMBNB83"
+-        // Person 클래스 ArrayList 생성성
+-        var FriendsList : ArrayList<FriendUser> = arrayListOf()
+-        var tempFriendsList : ArrayList<String> = arrayListOf()
+-
+-        init {
+-            db?.collection("users")?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+-                // ArrayList 비워줌
+-                FriendsList.clear()
+-                tempFriendsList.clear()
+-
+-                for (snapshot in querySnapshot!!.documents) {
+-                    if (snapshot.id == userUid) {
+-                        tempFriendsList = snapshot["friends"] as ArrayList<String>
+-                    }
+-                    notifyDataSetChanged()
+-                }
+-                for (snapshot in querySnapshot!!.documents) {
+-                    for(i in tempFriendsList) {
+-                        if (snapshot.id == i) {
+-                            var item = snapshot.toObject(FriendUser::class.java)
+-                            FriendsList.add(item!!)
+-                        }
+-                        notifyDataSetChanged()
+-                    }
+-                }
+-            }
+-        }
+-
+-        // xml파일을 inflate하여 ViewHolder를 생성
+-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+-            var view = LayoutInflater.from(parent.context).inflate(R.layout.friendslist_item, parent, false)
+-            return ViewHolder(view)
+-        }
+-
+-        inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+-        }
+-
+-        // onCreateViewHolder에서 만든 view와 실제 데이터를 연결
+-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+-            var viewHolder = (holder as ViewHolder).itemView
+-
+-            var name = viewHolder.findViewById<TextView>(R.id.name)
+-            name.text = FriendsList[position].name
+-        }
+-
+-        // 리사이클러뷰의 아이템 총 개수 반환
+-        override fun getItemCount(): Int {
+-            return FriendsList.size
+-        }
+-    }
+-}
+Index: app/src/main/res/layout/item.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"wrap_content\"\r\n    android:orientation=\"horizontal\"\r\n    android:padding=\"5dp\">\r\n\r\n    <TextView\r\n        android:id=\"@+id/textUserName\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_weight=\"1\"\r\n        android:text=\"TextView\" />\r\n\r\n    <TextView\r\n        android:id=\"@+id/textEmail\"\r\n        android:layout_width=\"111dp\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_weight=\"1\"\r\n        android:text=\"TextView\" />\r\n\r\n    <androidx.appcompat.widget.AppCompatButton\r\n        android:id=\"@+id/AddBtn\"\r\n        android:background=\"#03A9F4\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_weight=\"1\"\r\n        android:text=\"친구 추가\" />\r\n\r\n</LinearLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/item.xml b/app/src/main/res/layout/item.xml
+--- a/app/src/main/res/layout/item.xml	(revision e07cbb971eac47bc1c6e191208fa4bafcb1f3dd1)
++++ b/app/src/main/res/layout/item.xml	(date 1669093195833)
+@@ -1,30 +1,60 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:layout_width="match_parent"
++    android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+-    android:orientation="horizontal"
++    android:orientation="vertical"
+     android:padding="5dp">
+ 
++    <LinearLayout
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:gravity="center_vertical"
++        android:padding="10dp">
+     <TextView
+         android:id="@+id/textUserName"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+-        android:layout_weight="1"
++        android:layout_marginLeft="5dp"
++        android:layout_gravity="center|right"
++        android:textSize="16sp"
+         android:text="TextView" />
+ 
+-    <TextView
+-        android:id="@+id/textEmail"
+-        android:layout_width="111dp"
+-        android:layout_height="wrap_content"
+-        android:layout_weight="1"
+-        android:text="TextView" />
++        <View
++            android:layout_width="0dp"
++            android:layout_height="0dp"
++            android:layout_weight="1"/>
++
++        <TextView
++            android:id="@+id/textEmail"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:layout_gravity="center|right"
++            android:layout_marginLeft="30dp"
++            android:text="TextView"
++            android:textSize="16sp" />
+ 
+-    <androidx.appcompat.widget.AppCompatButton
++        <View
++            android:layout_width="0dp"
++            android:layout_height="0dp"
++            android:layout_weight="1"/>
++
++        <Button
+         android:id="@+id/AddBtn"
+-        android:background="#03A9F4"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+-        android:layout_weight="1"
+-        android:text="친구 추가" />
++        android:layout_gravity="center|right"
++        android:layout_marginRight="5dp"
++        android:background="@drawable/friendlist_button"
++        android:minWidth="0dp"
++        android:minHeight="0dp"
++        android:paddingLeft="25dp"
++        android:paddingTop="10dp"
++        android:paddingRight="25dp"
++        android:paddingBottom="10dp"
++        android:text="추가"
++        android:textColor="@color/white"
++        />
++
++    </LinearLayout>
+ 
+ </LinearLayout>
+\ No newline at end of file
+Index: app/src/main/res/layout/fragment_search.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<FrameLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    tools:context=\".SearchFragment\">\r\n\r\n    <!-- TODO: Update blank fragment layout -->\r\n    <LinearLayout\r\n        android:id=\"@+id/linearLayout\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"horizontal\">\r\n\r\n        <EditText\r\n            android:id=\"@+id/searchWord\"\r\n            android:layout_width=\"0dp\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_weight=\"1\"\r\n            android:layout_marginStart=\"30dp\"\r\n            android:layout_marginEnd=\"30dp\"\r\n            android:hint=\"입력 하는 곳.\"\r\n            android:inputType=\"text\"\r\n            android:minHeight=\"48dp\" />\r\n\r\n        <Button\r\n            android:id=\"@+id/search\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_marginEnd=\"30dp\"\r\n            android:text=\"검색하기\" />\r\n\r\n    </LinearLayout>\r\n\r\n    <androidx.recyclerview.widget.RecyclerView\r\n        android:id=\"@+id/FragrecyclerView\"\r\n        android:layout_width=\"387dp\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginStart=\"8dp\"\r\n        android:layout_marginTop=\"90dp\"\r\n        android:layout_marginEnd=\"8dp\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        />\r\n\r\n    <TextView\r\n        android:id=\"@+id/showID\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginStart=\"18dp\"\r\n        android:layout_marginTop=\"60dp\"\r\n        android:textSize=\"20sp\"\r\n        android:textColor=\"@color/black\"\r\n        android:textStyle=\"bold\"\r\n        android:text=\"아이디\" />\r\n    <TextView\r\n        android:id=\"@+id/showEmail\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginStart=\"180dp\"\r\n        android:layout_marginTop=\"60dp\"\r\n        android:textSize=\"20sp\"\r\n        android:textColor=\"@color/black\"\r\n        android:textStyle=\"bold\"\r\n        android:text=\"이메일\" />\r\n\r\n</FrameLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_search.xml b/app/src/main/res/layout/fragment_search.xml
+--- a/app/src/main/res/layout/fragment_search.xml	(revision e07cbb971eac47bc1c6e191208fa4bafcb1f3dd1)
++++ b/app/src/main/res/layout/fragment_search.xml	(date 1669093195844)
+@@ -28,8 +28,18 @@
+             android:id="@+id/search"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+-            android:layout_marginEnd="30dp"
+-            android:text="검색하기" />
++            android:layout_gravity="center|right"
++            android:layout_marginRight="10dp"
++            android:background="@drawable/friendlist_button"
++            android:minWidth="0dp"
++            android:minHeight="0dp"
++            android:paddingLeft="25dp"
++            android:paddingTop="10dp"
++            android:paddingRight="25dp"
++            android:paddingBottom="10dp"
++            android:text="검색"
++            android:textColor="@color/white"
++            />
+ 
+     </LinearLayout>
+ 
+@@ -45,15 +55,22 @@
+         app:layout_constraintStart_toStartOf="parent"
+         />
+ 
++
++    <View
++        android:layout_width="match_parent"
++        android:layout_height="1dp"
++        android:layout_marginHorizontal="10dp"
++        android:background="#aaa" />
++
+     <TextView
+         android:id="@+id/showID"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginStart="18dp"
+         android:layout_marginTop="60dp"
+-        android:textSize="20sp"
+-        android:textColor="@color/black"
++        android:textSize="15sp"
+         android:textStyle="bold"
++        android:textColor="@color/gray"
+         android:text="아이디" />
+     <TextView
+         android:id="@+id/showEmail"
+@@ -61,8 +78,8 @@
+         android:layout_height="wrap_content"
+         android:layout_marginStart="180dp"
+         android:layout_marginTop="60dp"
+-        android:textSize="20sp"
+-        android:textColor="@color/black"
++        android:textSize="15sp"
++        android:textColor="@color/gray"
+         android:textStyle="bold"
+         android:text="이메일" />
+ 

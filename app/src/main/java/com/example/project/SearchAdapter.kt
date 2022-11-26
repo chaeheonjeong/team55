@@ -58,6 +58,8 @@ class SearchAdapter(private var items: List<MyItem>)
                 .addOnSuccessListener {
                     println("친구 추가 성공 + ${item.name}")
                 }.addOnFailureListener { println("친구 추가 실패 + name : ${item.name}") }
+
+            holder.binding.AddBtn.isSelected = holder.binding.AddBtn.isSelected != true
         }
     }
     override fun getItemCount() = items.size

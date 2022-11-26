@@ -19,6 +19,7 @@ import com.example.project.LoginActivity
 import com.example.project.R
 import com.example.project.databinding.FragmentProfile2Binding
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -27,7 +28,7 @@ val user = Firebase.auth.currentUser?.uid
 
 class ProfileFragment: Fragment() {
     //lateinit var recyclerItemAdapter: RecyclerItemAdapter
-    val data = mutableListOf<PostData>()
+    var data = mutableListOf<PostData>()
     private lateinit var binding: FragmentProfile2Binding
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,6 +46,7 @@ class ProfileFragment: Fragment() {
         val dialog = CustomDialog(requireContext())
         val db = Firebase.firestore
         val itemsCollectionRef = db.collection("users")
+        var a = true
 
         fun getProfileImage() {
             if (user != null) {
@@ -69,6 +71,7 @@ class ProfileFragment: Fragment() {
 
         atStart()
         initRecycler()
+
 
         binding.deleteAccountButton.visibility = View.INVISIBLE
         binding.logoutButton.visibility = View.INVISIBLE
@@ -154,7 +157,10 @@ class ProfileFragment: Fragment() {
         //binding.recyclerView.adapter = RecyclerItemAdapter(context)
         //recyclerItemAdapter = RecyclerItemAdapter()
         data.apply {
+            //data = mutableListOf()
             db.collection("posts")
+                .whereEqualTo("exists", true)
+                .orderBy("created_at", Query.Direction.DESCENDING)
                 .whereEqualTo("writer_uid", user)
                 .get()
                 .addOnSuccessListener { documents ->
@@ -165,7 +171,8 @@ class ProfileFragment: Fragment() {
 
                         for (i in 0 until data.size) {
                             if (i == 0) {
-                                Firebase.firestore.collection("posts").document(data[i].postImg)
+                                Firebase.firestore.collection("posts")
+                                    .document(data[i].postImg)
                                     .addSnapshotListener { documentSnapshot, _ ->
                                         if (documentSnapshot == null) return@addSnapshotListener
                                         if (documentSnapshot.data != null) {

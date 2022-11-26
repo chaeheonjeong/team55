@@ -1,6 +1,7 @@
 package com.example.project.cogjs
 
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -10,12 +11,16 @@ import android.widget.ImageView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.project.CustomDialog
 import com.example.project.MS.PostData
+import com.example.project.MS.db
+import com.example.project.MS.user
 import com.example.project.R
 import com.example.project.databinding.ActivityFriendProfileBinding
+import com.example.project.databinding.FragmentProfile2Binding
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
@@ -23,17 +28,19 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 
 class FriendProfile: AppCompatActivity() {
+    val data = mutableListOf<PostData>()
+    private lateinit var binding: ActivityFriendProfileBinding
     private lateinit var postImages: List<String>
     var friendUid : String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityFriendProfileBinding.inflate(layoutInflater)
+        binding = ActivityFriendProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         friendUid = intent.getStringExtra("friendUid").toString()
 
+        val data = mutableListOf<PostData>()
         var editMode = false
-        val dialog = CustomDialog(this)
         val db = Firebase.firestore
         val itemsCollectionRef = db.collection("users")
         val user = Firebase.auth.currentUser?.uid
@@ -57,96 +64,135 @@ class FriendProfile: AppCompatActivity() {
             getProfileImage()
             binding.nicknameTextview.text = it["name"] as CharSequence?
             binding.IntroduceTextview.text = it["introduce"] as CharSequence?
-            binding.recyclerView
         }
 
         atStart()
+        initRecycler()
 
-        //binding.profilePic.setImageResource(R.drawable.pro2)
-
-        binding.profilePic.setOnClickListener {
-            if (editMode) {
-                val intent = Intent()
-                intent.type = "image/*"
-                intent.action = Intent.ACTION_GET_CONTENT
-                launcher.launch(intent)
-            }
-        }
-
-        binding.nicknameTextview.setOnClickListener {
-            if (editMode) {
-                dialog.myDig()
-                dialog.setOnClickListener(object : CustomDialog.ButtonClickListener {
-                    override fun onClicked(myName: String) {
-                        if(myName != "") {
-                            binding.nicknameTextview.text = myName
-                            db.collection("users").document("$friendUid")
-                                .update(mapOf("name" to myName))
-                        }
-                    }
-                })
-            }
-        }
-
-        binding.IntroduceTextview.setOnClickListener {
-            if (editMode) {
-                dialog.myDig()
-                dialog.setOnClickListener(object : CustomDialog.ButtonClickListener {
-                    override fun onClicked(myName: String) {
-                        if (myName != "") {
-                            binding.IntroduceTextview.text = myName
-                            db.collection("users").document("$friendUid")
-                                .update(mapOf("introduce" to myName))
-                        }
-                    }
-                })
-            }
-        }
     }
 
-    private fun loadPosts() {
-        Firebase.firestore.collection("users").document("$friendUid")
-            .addSnapshotListener { documentSnapshot, _ ->
-                if (documentSnapshot == null) return@addSnapshotListener
-                if (documentSnapshot.data != null) {
-                    val postImages: List<String>? = documentSnapshot.toObject<List<String>>()
-                }
-            }
-    }
+    private fun initRecycler() {
+        //binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        //binding.recyclerView.adapter = RecyclerItemAdapter(context)
+        //recyclerItemAdapter = RecyclerItemAdapter()
+        data.apply {
+            db.collection("posts")
+                .whereEqualTo("writer_uid", "$friendUid")
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        Log.d(TAG, "${document.id} => ${document.data}")
+                        add(PostData(postImg = document.id))
+                        //binding.textView.text = data.size.toString()
 
-    private var launcher: ActivityResultLauncher<Intent> =
-        registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-            if (result.resultCode == RESULT_OK) {
-                Log.e(TAG, "result : $result")
-                val intent: Intent? = result.data
-                Log.e(TAG, "intent : $intent")
-                val uri = intent?.data
-                Log.e(TAG, "uri : $uri")
-                findViewById<ImageView>(R.id.profilePic).setImageURI(uri)
-                if (uri != null) {
-                    uploadToStorage(uri, "$friendUid")
+                        for (i in 0 until data.size) {
+                            if (i == 0) {
+                                Firebase.firestore.collection("posts").document(data[i].postImg)
+                                    .addSnapshotListener { documentSnapshot, _ ->
+                                        if (documentSnapshot == null) return@addSnapshotListener
+                                        if (documentSnapshot.data != null) {
+                                            val url = documentSnapshot.data!!["post_image"]
+                                            Glide.with(binding.root).load(url).apply(RequestOptions()).into(binding.imageView2)
+                                        }
+                                    }
+                            }
+
+                            if (i == 1) {
+                                Firebase.firestore.collection("posts").document(data[i].postImg)
+                                    .addSnapshotListener { documentSnapshot, _ ->
+                                        if (documentSnapshot == null) return@addSnapshotListener
+                                        if (documentSnapshot.data != null) {
+                                            val url = documentSnapshot.data!!["post_image"]
+                                            Glide.with(binding.root).load(url).apply(RequestOptions()).into(binding.imageView3)
+                                        }
+                                    }
+                            }
+
+                            if (i == 2) {
+                                Firebase.firestore.collection("posts").document(data[i].postImg)
+                                    .addSnapshotListener { documentSnapshot, _ ->
+                                        if (documentSnapshot == null) return@addSnapshotListener
+                                        if (documentSnapshot.data != null) {
+                                            val url = documentSnapshot.data!!["post_image"]
+                                            Glide.with(binding.root).load(url).apply(RequestOptions()).into(binding.imageView4)
+                                        }
+                                    }
+                            }
+
+                            if (i == 3) {
+                                Firebase.firestore.collection("posts").document(data[i].postImg)
+                                    .addSnapshotListener { documentSnapshot, _ ->
+                                        if (documentSnapshot == null) return@addSnapshotListener
+                                        if (documentSnapshot.data != null) {
+                                            val url = documentSnapshot.data!!["post_image"]
+                                            Glide.with(binding.root).load(url).apply(RequestOptions()).into(binding.imageView5)
+                                        }
+                                    }
+                            }
+
+                            if (i == 4) {
+                                Firebase.firestore.collection("posts").document(data[i].postImg)
+                                    .addSnapshotListener { documentSnapshot, _ ->
+                                        if (documentSnapshot == null) return@addSnapshotListener
+                                        if (documentSnapshot.data != null) {
+                                            val url = documentSnapshot.data!!["post_image"]
+                                            Glide.with(binding.root).load(url).apply(RequestOptions()).into(binding.imageView6)
+                                        }
+                                    }
+                            }
+
+                            if (i == 5) {
+                                Firebase.firestore.collection("posts").document(data[i].postImg)
+                                    .addSnapshotListener { documentSnapshot, _ ->
+                                        if (documentSnapshot == null) return@addSnapshotListener
+                                        if (documentSnapshot.data != null) {
+                                            val url = documentSnapshot.data!!["post_image"]
+                                            Glide.with(binding.root).load(url).apply(RequestOptions()).into(binding.imageView7)
+                                        }
+                                    }
+                            }
+
+                            if (i == 6) {
+                                Firebase.firestore.collection("posts").document(data[i].postImg)
+                                    .addSnapshotListener { documentSnapshot, _ ->
+                                        if (documentSnapshot == null) return@addSnapshotListener
+                                        if (documentSnapshot.data != null) {
+                                            val url = documentSnapshot.data!!["post_image"]
+                                            Glide.with(binding.root).load(url).apply(RequestOptions()).into(binding.imageView8)
+                                        }
+                                    }
+                            }
+
+                            if (i == 7) {
+                                Firebase.firestore.collection("posts").document(data[i].postImg)
+                                    .addSnapshotListener { documentSnapshot, _ ->
+                                        if (documentSnapshot == null) return@addSnapshotListener
+                                        if (documentSnapshot.data != null) {
+                                            val url = documentSnapshot.data!!["post_image"]
+                                            Glide.with(binding.root).load(url).apply(RequestOptions()).into(binding.imageView9)
+                                        }
+                                    }
+                            }
+
+                            if (i == 8) {
+                                Firebase.firestore.collection("posts").document(data[i].postImg)
+                                    .addSnapshotListener { documentSnapshot, _ ->
+                                        if (documentSnapshot == null) return@addSnapshotListener
+                                        if (documentSnapshot.data != null) {
+                                            val url = documentSnapshot.data!!["post_image"]
+                                            Glide.with(binding.root).load(url).apply(RequestOptions()).into(binding.imageView10)
+                                        }
+                                    }
+                            }
+                        }
+                    }
                 }
-            }
-        }
-    private fun uploadToStorage(uri: Uri, postKey: String) {
-        val fileName = System.currentTimeMillis()
-        val ref = Firebase.storage.reference.child("post_image/$fileName.jpg")
-        ref.putFile(uri).continueWithTask { task ->
-            if (!task.isSuccessful) {
-                task.exception?.let {
-                    throw it
+                .addOnFailureListener { exception ->
+                    Log.w(TAG, "Error getting documents: ", exception)
                 }
-            }
-            ref.downloadUrl
-        }.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val downloadUri = task.result
-                // 첫 번째 downloadUri가 Complete 됐을 때 database의 image를 업데이트 해준다.
-                val db = Firebase.firestore
-                db.collection("users").document("$postKey").update(mapOf("profile_image" to downloadUri))
-            }
+            //recyclerItemAdapter.datas = data
+            //recyclerItemAdapter.notifyDataSetChanged()
+            //binding.recyclerView.adapter = recyclerItemAdapter
         }
     }
 }

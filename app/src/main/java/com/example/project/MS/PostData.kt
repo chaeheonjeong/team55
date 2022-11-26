@@ -6,5 +6,5 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ListenerRegistration
 
 data class PostData(
-    var postImg: String
+    val postImg: String
 )

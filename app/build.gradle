@@ -32,6 +32,9 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    dataBinding {
+        enabled = true
+    }
 
     buildFeatures{
         viewBinding = true
@@ -83,6 +86,11 @@ dependencies {
     // viewModelScope
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0-alpha03"
 
+    // viewModel, livedata
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.1")
+
     // card view
     implementation "androidx.cardview:cardview:1.0.0"
+
 }

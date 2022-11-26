@@ -14,26 +14,8 @@ data class Post(
     @get:PropertyName("post_image") @set:PropertyName("post_image") var postImage: String = "",
     val comments: List<Comment?>? = null,
     @get:PropertyName("like_count") @set:PropertyName("like_count") var likeCount: Int = 0,
-    @get:PropertyName("created_at") @set:PropertyName("created_at") var createdAt: Timestamp = Timestamp.now()
-)
-
-data class Comment(
-    val content: String = "",
+    @get:PropertyName("created_at") @set:PropertyName("created_at") var createdAt: Timestamp = Timestamp.now(),
+    @get:PropertyName("writer_uid") @set:PropertyName("writer_uid") var writerUid: String = "",
     val exists: Boolean = true,
-    @get:PropertyName("profile_image") @set:PropertyName("profile_image") var profileImage: String = "",
-    val name: String = "",
-    @get:PropertyName("created_at") @set:PropertyName("created_at") var createdAt: Timestamp? = null, // todo Date 타입도 되는지 확인
 )
 
-data class User(
-    val name: String = "",
-    val email: String = "",
-    val intro: String? = "",
-    @get:PropertyName("profile_image") @set:PropertyName("profile_image") var profileImage: String = "",
-    val posts: List<String>? = null,
-    val friends: List<String>? = null,
-
-    )
-
-
-// todo 1. Comment 잘 하고

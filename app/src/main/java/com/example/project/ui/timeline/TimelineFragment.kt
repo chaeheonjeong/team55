@@ -10,6 +10,7 @@ import com.example.project.databinding.FragmentTimelineBinding
 class TimelineFragment: Fragment() {
     private lateinit var binding: FragmentTimelineBinding
     private lateinit var viewModel: TimelineViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -22,11 +23,23 @@ class TimelineFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = TimelineViewModel()
-        val timelineAdapter = TimelineAdapter(this)
-        binding.rvTimeline.adapter = timelineAdapter
+
+        // 나중에 그냥 설정해주자. post 많이 늘어나면 이게 효과가 있을 수도 있으니까.
+        binding.rvTimeline.setHasFixedSize(true)
+        binding.rvTimeline.setItemViewCacheSize(30)
+        binding.rvTimeline.layoutManager?.isItemPrefetchEnabled = false
+        binding.rvTimeline.itemAnimator = null
+
+
+        //val adapter = TimelineAdapter(this)
+        //binding.rvTimeline.adapter = adapter
+        val adapter2 = TimelineAdapter2(this)
+        binding.rvTimeline.adapter = adapter2
 
         viewModel.posts.observe(viewLifecycleOwner) { posts ->
-            timelineAdapter.submitList(posts)
+            //adapter.submitList(posts)
+            adapter2.differ.submitList(posts)
         }
+
     }
 }

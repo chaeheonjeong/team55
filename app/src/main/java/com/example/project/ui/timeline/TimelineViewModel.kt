@@ -31,8 +31,6 @@ class TimelineViewModel: ViewModel() {
             if(snapshot == null)
                 return@addSnapshotListener
 
-            // 마지막 데이터가 있는지 확인
-            val lastVisible = snapshot.documents[snapshot.size() - 1]
             // 주어진 데이터(snapshot)으로 posts를 만들어 _posts를 업데이트 해준다.
             _posts.value = makesPosts(snapshot)
         }

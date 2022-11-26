@@ -13,21 +13,37 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/appCompatTextView"
             style="@style/Size20.Black.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
             android:text="게시물 작성"
+            android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/button_adding_post"
+            app:layout_constraintHorizontal_bias="0.639"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.521" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_adding_post"
             style="@style/Size16.Black"
             android:layout_width="wrap_content"
-            android:layout_height="45dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/friendlist_button"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="5dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="5dp"
             android:text="작성"
+            android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -40,7 +56,9 @@
         android:layout_margin="10dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_toolbar">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_toolbar"
+        app:layout_constraintVertical_bias="0.0">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_adding_image"
@@ -48,14 +66,19 @@
             android:layout_height="250dp"
             android:layout_margin="10dp"
             android:src="@color/light_gray"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.07" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_title"
             style="@style/Size14.Black.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
             android:text="제목"
             app:layout_constraintStart_toStartOf="@id/iv_adding_image"
             app:layout_constraintTop_toBottomOf="@id/iv_adding_image" />
@@ -65,8 +88,8 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:hint="title"
-            app:layout_constraintStart_toStartOf="@id/tv_title"
-            app:layout_constraintTop_toBottomOf="@id/tv_title" />
+            tools:layout_editor_absoluteX="95dp"
+            tools:layout_editor_absoluteY="327dp" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_content"
@@ -74,7 +97,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="설명"
-            app:layout_constraintStart_toStartOf="@id/et_adding_title"
+            app:layout_constraintStart_toStartOf="@+id/tv_title"
             app:layout_constraintTop_toBottomOf="@id/et_adding_title" />
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -82,8 +105,9 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:hint="content"
-            app:layout_constraintStart_toStartOf="@id/tv_content"
-            app:layout_constraintTop_toBottomOf="@id/tv_content" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="391dp" />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -94,7 +118,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.516" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

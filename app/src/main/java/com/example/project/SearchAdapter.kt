@@ -25,7 +25,7 @@ data class MyItem(val id: String, val name: String,val email:String) {
 
 class SearchViewHolder(val binding: ItemBinding) : RecyclerView.ViewHolder(binding.root)
 
-class SearchAdapter(private var items: List<MyItem>, var context: Context)
+class SearchAdapter(private var items: List<MyItem>, var fragment: SearchFragment)
     : RecyclerView.Adapter<SearchViewHolder>() {
 
     private val db: FirebaseFirestore = Firebase.firestore
@@ -58,7 +58,7 @@ class SearchAdapter(private var items: List<MyItem>, var context: Context)
             FirebaseFirestore.getInstance().collection("users").document(uid!!)
                 .update("friends", FieldValue.arrayUnion(item.id))
                 .addOnSuccessListener {
-                    Toast.makeText(context, "친구 추가 성공", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(fragment.activity, "친구 추가 성공.", Toast.LENGTH_SHORT).show()
                     println("친구 추가 성공 + ${item.name}")
                 }.addOnFailureListener { println("친구 추가 실패 + name : ${item.name}") }
 
